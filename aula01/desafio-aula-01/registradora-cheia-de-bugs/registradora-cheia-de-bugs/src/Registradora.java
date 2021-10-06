@@ -12,12 +12,12 @@ public class Registradora {
         segundoBug();
 
         terceiroBug();
-//
-//        quartoBug();
-//
-//        quintoBug();
-//
-//        sextoBug();
+
+        quartoBug();
+
+        quintoBug();
+
+        sextoBug();
     }
 
     private static double registrarItem(String item, int quantidade) {
@@ -33,6 +33,7 @@ public class Registradora {
                 if ("pao".equals(item) || "sanduiche".equals(item) || "torta".equals(item)) {
                     if (!DataProjeto.cozinhaEmFuncionamento()) {
                         System.out.println("Desculpe, a cozinha está fechada!");
+                        return 0;
                     } else {
                         System.out.println("OK, vou pedir reposição para a cozinha.");
                         ReposicaoCozinha.reporItem(item);
@@ -71,7 +72,7 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
-        System.out.println("Estoque atual: " + ItensPorQuantidade.sanduiche);
+        System.out.println("Estoque atual de " + item + ": " + ItensPorQuantidade.sanduiche);
     }
 
     private static void segundoBug() {
@@ -82,7 +83,7 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
-        System.out.println("Estoque atual: " + ItensPorQuantidade.fatiaDeTorta);
+        System.out.println("Estoque atual de " + item + ": " + ItensPorQuantidade.fatiaDeTorta);
     }
 
     private static void terceiroBug() {
@@ -93,7 +94,7 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
-        System.out.println("Estoque atual: " + ItensPorQuantidade.cafe);
+        System.out.println("Estoque atual de " + item + ": " + ItensPorQuantidade.cafe);
 
     }
 
@@ -106,6 +107,7 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
+        System.out.println("Estoque atual de " + item + ": " + ItensPorQuantidade.sanduiche);
 
         // Cliente 2
         String item2 = "sanduiche";
@@ -114,6 +116,8 @@ public class Registradora {
         double precoTotal2 = registrarItem(item2, quantidade2);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal2));
+        System.out.println("Estoque atual de " + item + ": " + ItensPorQuantidade.sanduiche);
+
     }
 
     private static void quintoBug() {
@@ -124,6 +128,8 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
+        System.out.println("Estoque atual de " + item + ": " + ItensPorQuantidade.pao);
+
     }
 
     private static void sextoBug() {
@@ -135,6 +141,8 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
+        System.out.println("Estoque atual de " + item + ": " + ItensPorQuantidade.sanduiche);
+
 
         // Cliente 2
         String item2 = "sanduiche";
@@ -143,6 +151,8 @@ public class Registradora {
         double precoTotal2 = registrarItem(item2, quantidade2);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal2));
+        System.out.println("Estoque atual de " + item + ": " + ItensPorQuantidade.sanduiche);
+
     }
 
 }

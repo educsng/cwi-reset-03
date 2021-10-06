@@ -2,7 +2,7 @@ public class BaixaEstoque {
 
     static void diminuirItem(String item, int quantidade) {
         if ("pao".equals(item)) {
-            ItensPorQuantidade.pao -= quantidade;
+            ItensPorQuantidade.pao -= quantidade * 60;
         }
         if ("torta".equals(item)) {
             ItensPorQuantidade.fatiaDeTorta -= quantidade;
