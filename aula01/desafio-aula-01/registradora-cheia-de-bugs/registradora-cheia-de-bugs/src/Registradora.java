@@ -2,9 +2,12 @@
 public class Registradora {
 
     public static void main(String[] args) {
+
+        // métodos
+
         primeiroBug();
 
-//        segundoBug();
+       segundoBug();
 
 //        terceiroBug();
 //
@@ -30,7 +33,7 @@ public class Registradora {
                 ReposicaoFornecedor.reporItem(item);
             }
         }
-
+        BaixaEstoque.diminuirItem(item, quantidade);
         return precoItem;
     }
 
@@ -42,6 +45,7 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
+        System.out.println("Estoque atual: " + ItensPorQuantidade.sanduiche);
     }
 
     private static void segundoBug() {
@@ -52,6 +56,7 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
+        System.out.println("Estoque atual: " + ItensPorQuantidade.fatiaDeTorta);
     }
 
     private static void terceiroBug() {
@@ -62,6 +67,8 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
+        System.out.println("Estoque atual: " + ItensPorQuantidade.cafe);
+
     }
 
     private static void quartoBug() {
