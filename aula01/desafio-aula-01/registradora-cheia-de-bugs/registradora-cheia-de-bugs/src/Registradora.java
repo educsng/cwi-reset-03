@@ -1,3 +1,5 @@
+import java.util.Locale;
+import java.util.Scanner;
 
 public class Registradora {
 
@@ -7,9 +9,9 @@ public class Registradora {
 
         primeiroBug();
 
-       segundoBug();
+        segundoBug();
 
-//        terceiroBug();
+        terceiroBug();
 //
 //        quartoBug();
 //
@@ -19,9 +21,33 @@ public class Registradora {
     }
 
     private static double registrarItem(String item, int quantidade) {
+        Scanner sc = new Scanner(System.in);
+
         double precoItem = RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
 
-        if (QuantidadeMinimaItem.precisaReposicao(item)) {
+        if (QuantidadeMinimaItem.verificaEstoque(item, quantidade)) {
+            System.out.println("Produto em falta.");
+            System.out.println("Deseja aguardar reposição: [S ou N]");
+            String resposta = sc.nextLine().toUpperCase(Locale.ROOT);
+            if (resposta.equals("S")) {
+                if ("pao".equals(item) || "sanduiche".equals(item) || "torta".equals(item)) {
+                    if (!DataProjeto.cozinhaEmFuncionamento()) {
+                        System.out.println("Desculpe, a cozinha está fechada!");
+                    } else {
+                        System.out.println("OK, vou pedir reposição para a cozinha.");
+                        ReposicaoCozinha.reporItem(item);
+                    }
+                }
+                if ("leite".equals(item) || "cafe".equals(item)) {
+                    System.out.println("OK, vou pedir reposição para o meu fornecedor.");
+                    ReposicaoFornecedor.reporItem(item);
+                }
+
+            } else {
+                System.out.println("Desculpa, não poderemos lhe atender então.");
+            }
+
+        } else if (QuantidadeMinimaItem.precisaReposicao(item)) {
             if ("pao".equals(item) || "sanduiche".equals(item) || "torta".equals(item)) {
                 if (!DataProjeto.cozinhaEmFuncionamento()) {
                     System.out.println("Cozinha fechada!");

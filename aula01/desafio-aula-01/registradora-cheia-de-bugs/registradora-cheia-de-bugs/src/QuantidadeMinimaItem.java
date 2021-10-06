@@ -23,4 +23,28 @@ public class QuantidadeMinimaItem {
 
         return false;
     }
+
+    public static boolean verificaEstoque(String item, int quantidade) {
+        if ("pao".equals(item)) {
+            return ItensPorQuantidade.pao < quantidade;
+        }
+
+        if ("torta".equals(item)) {
+            return ItensPorQuantidade.fatiaDeTorta < quantidade;
+        }
+
+        if ("sanduiche".equals(item)) {
+            return ItensPorQuantidade.sanduiche < quantidade;
+        }
+
+        if ("cafe".equals(item)) {
+            return ItensPorQuantidade.leite < quantidade;
+        }
+
+        if ("leite".equals(item)) {
+            return ItensPorQuantidade.cafe < quantidade;
+        }
+
+        return false;
+    }
 }
