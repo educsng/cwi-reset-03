@@ -15,11 +15,11 @@ public class Pessoa {
     }
 
     // métodos
-    public boolean imprimeCaracteristicas() {
+    public void imprimeCaracteristicas() {
         System.out.println("Nome: " + this.nome);
         System.out.println("Idade: " + this.idade);
         System.out.println("Gênero: " + this.genero.getDescricao());
-        return false;
+        System.out.println("Número de Oscars: " + this.numOscarsVencidos);
     }
 
     public Genero getGenero() {
