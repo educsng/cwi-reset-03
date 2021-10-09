@@ -1,14 +1,7 @@
-public class Ator {
-    private String nome;
-    private Integer idade;
-    private Integer numOscarsVencidos;
-    private Genero genero;
+public class Ator extends Pessoa {
 
-    // métodos
-    public void imprimeCaracteristicas() {
-        System.out.println("Nome: " + this.nome);
-        System.out.println("Idade: " + this.idade);
-        System.out.println("Gênero: " + this.genero.getDescricao());
+    public Ator(String nome, Integer idade, Genero genero, Integer numOscarsVencidos) {
+        super(nome, idade, genero, numOscarsVencidos);
     }
 
 }

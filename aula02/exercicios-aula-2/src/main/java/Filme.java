@@ -21,7 +21,7 @@ public class Filme {
     }
 
     public void reproduzirFilme() {
-        System.out.println("Nome do filme: " + nome + "\nDescrição: " + descricao + "\nDuração: " + duracao + " minutos" + "\nDiretor: " + diretor.nome);
+        System.out.println("Nome do filme: " + nome + "\nDescrição: " + descricao + "\nDuração: " + duracao + " minutos" + "\nDiretor: " + diretor.getNome());
     }
 
 
