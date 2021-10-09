@@ -11,16 +11,16 @@ public class DataProjeto {
 
     public static DataProjeto criarDataComCozinhaFuncionando() {
         Random random = new Random();
-        int hora = random.nextInt(10) + 6;
-        int minuto = hora == 16 ? random.nextInt(40) : random.nextInt(60);
+        int hora = random.nextInt(11) + 6;
+        int minuto = hora == 16 ? random.nextInt(41) : random.nextInt(61);
 
         return new DataProjeto(true, hora, minuto);
     }
 
     public static DataProjeto criarDataComCozinhaEncerradaMasComDiaUtil() {
         Random random = new Random();
-        int hora = random.nextInt(6);
-        int minuto = random.nextInt(60);
+        int hora = random.nextInt(7);
+        int minuto = random.nextInt(61);
 
         return new DataProjeto(true, hora, minuto);
     }

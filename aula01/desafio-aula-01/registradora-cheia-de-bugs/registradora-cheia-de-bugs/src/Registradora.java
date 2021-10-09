@@ -9,39 +9,45 @@ public class Registradora {
 
         primeiroBug();
 
-        segundoBug();
-
-        terceiroBug();
-
-        quartoBug();
-
-        quintoBug();
-
-        sextoBug();
+//        segundoBug();
+//
+//        terceiroBug();
+//
+//        quartoBug();
+//
+//        quintoBug();
+//
+//        sextoBug();
     }
 
     private static double registrarItem(String item, int quantidade) {
         Scanner sc = new Scanner(System.in);
 
-        double precoItem = RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
+        boolean itensDependeCozinha = "pao".equals(item) || "sanduiche".equals(item) || "torta".equals(item);
+        boolean itensDependeFornecedor = "leite".equals(item) || "cafe".equals(item);
+
 
         if (QuantidadeMinimaItem.verificaEstoque(item, quantidade)) {
             System.out.println("Produto em falta.");
             System.out.println("Deseja aguardar reposição: [S ou N]");
             String resposta = sc.nextLine().toUpperCase(Locale.ROOT);
             if (resposta.equals("S")) {
-                if ("pao".equals(item) || "sanduiche".equals(item) || "torta".equals(item)) {
+                if (itensDependeCozinha) {
                     if (!DataProjeto.cozinhaEmFuncionamento()) {
                         System.out.println("Desculpe, a cozinha está fechada!");
-                        return 0;
+                        throw new RuntimeException("Obrigado.");
                     } else {
                         System.out.println("OK, vou pedir reposição para a cozinha.");
-                        ReposicaoCozinha.reporItem(item);
+                        while (ItensPorQuantidade.estoqueInsuficiente(item, quantidade)) {
+                            ReposicaoCozinha.reporItem(item);
+                        }
                     }
                 }
-                if ("leite".equals(item) || "cafe".equals(item)) {
+                if (itensDependeFornecedor) {
                     System.out.println("OK, vou pedir reposição para o meu fornecedor.");
-                    ReposicaoFornecedor.reporItem(item);
+                    while (ItensPorQuantidade.estoqueInsuficiente(item, quantidade)) {
+                        ReposicaoFornecedor.reporItem(item);
+                    }
                 }
 
             } else {
@@ -60,7 +66,9 @@ public class Registradora {
                 ReposicaoFornecedor.reporItem(item);
             }
         }
-        BaixaEstoque.diminuirItem(item, quantidade);
+        ItensPorQuantidade.diminuirItem(item, quantidade);
+
+        double precoItem = RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
         return precoItem;
     }
 
