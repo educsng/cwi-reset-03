@@ -5,24 +5,23 @@ public class Filme {
     private String descricao;
     private int duracao;
     private int ano;
-    private int avaliacao;
+    private Double avaliacao;
     private Diretor diretor;
 
     // Construtor
 
 
-    public Filme(String nome, String descricao, int duracao, int ano, int avaliacao, Diretor diretor) throws AvaliacaoForaDoPadraoException {
+    public Filme(String nome, String descricao, int duracao, int ano, Double avaliacao, Diretor diretor) throws AvaliacaoForaDoPadraoException {
+        if (avaliacao < 1 || avaliacao > 5) {
+            throw new AvaliacaoForaDoPadraoException();
+        }
+
         this.nome = nome;
         this.descricao = descricao;
         this.duracao = duracao;
         this.ano = ano;
         this.diretor = diretor;
         this.avaliacao = avaliacao;
-
-        if (avaliacao < 1 || avaliacao > 5) {
-            throw new AvaliacaoForaDoPadraoException();
-        }
-
 
     }
 
