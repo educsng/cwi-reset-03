@@ -2,7 +2,6 @@ package br.com.cwi.reset.eduardocassanego;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 public class Ator {
 
@@ -12,7 +11,6 @@ public class Ator {
     private LocalDate dataNascimento;
     private StatusCarreira statusCarreira;
     private Integer anoInicioAtividade;
-    private AtorService atorService;
 
     // Construtor
     public Ator(Integer id, String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade)
@@ -74,7 +72,6 @@ public class Ator {
 
 
 
-
     // Getters e Setters
     public String getNome() {
         return nome;
@@ -88,5 +85,11 @@ public class Ator {
         this.id = id;
     }
 
+    public StatusCarreira getStatusCarreira() {
+        return statusCarreira;
+    }
 
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
 }
