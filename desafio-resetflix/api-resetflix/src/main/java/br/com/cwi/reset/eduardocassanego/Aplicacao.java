@@ -12,7 +12,7 @@ public class Aplicacao {
         AtorService atorService = new AtorService(fakeDatabase);
 
         String nome = "Will Smith";
-        LocalDate dataNascimento = LocalDate.of(1968, Month.SEPTEMBER, 25);
+        LocalDate dataNascimento = LocalDate.of(1978, Month.SEPTEMBER, 25);
         StatusCarreira statusCarreira = StatusCarreira.EM_ATIVIDADE;
         Integer anoInicioAtividade = 1986;
         AtorRequest atorRequest = new AtorRequest(nome, dataNascimento, statusCarreira, anoInicioAtividade);
