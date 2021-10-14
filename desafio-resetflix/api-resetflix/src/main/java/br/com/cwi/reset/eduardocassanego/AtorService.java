@@ -54,4 +54,23 @@ public class AtorService {
         return atorEmAtividade;
     }
 
+    public Ator consultarAtor(Integer id) {
+        try {
+            if (id == null) {
+                throw new CampoObrigatorioNaoInformado();
+            } else {
+                for (Ator ator : fakeDatabase.recuperaAtores()) {
+                    if (id.equals(ator.getId())) {
+                        return ator;
+                    } else {
+                        throw new IdNaoCorresponde(id);
+                    }
+                }
+            }
+        } catch (CampoObrigatorioNaoInformado | IdNaoCorresponde e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
 }

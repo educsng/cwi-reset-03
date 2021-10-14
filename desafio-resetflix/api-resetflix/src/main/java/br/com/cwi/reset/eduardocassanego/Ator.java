@@ -81,15 +81,15 @@ public class Ator {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public StatusCarreira getStatusCarreira() {
         return statusCarreira;
     }
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
+    }
+
+    public Integer getAnoInicioAtividade() {
+        return anoInicioAtividade;
     }
 }
