@@ -73,4 +73,18 @@ public class AtorService {
         return null;
     }
 
+    public List<Ator> consultarAtores() {
+        List<Ator> atoresConsultados;
+        atoresConsultados = fakeDatabase.recuperaAtores();
+        try {
+            if (atoresConsultados.isEmpty()) {
+                throw new NenhumAtorCadastrado();
+            } else {
+                return atoresConsultados;
+            }
+        } catch (NenhumAtorCadastrado e) {
+            System.out.println(e.getMessage());
+        }
+        return atoresConsultados;
+    }
 }

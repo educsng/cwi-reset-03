@@ -33,20 +33,29 @@ public class Aplicacao {
         atorService.criarAtor(atorRequest2);
 
 
-        List<Ator> atores = fakeDatabase.recuperaAtores();
-        List<AtorEmAtividade> atoresEmAtividade = atorService.listarAtoresEmAtividade("k");
-        for (AtorEmAtividade ator : atoresEmAtividade) {
-            System.out.println("ID: " + ator.getId());
-            System.out.println("Nome: " + ator.getNome());
-            System.out.println("Data Nascimento: " + ator.getDataNascimento());
+
+//        List<AtorEmAtividade> atoresEmAtividade = atorService.listarAtoresEmAtividade("k");
+//        for (AtorEmAtividade ator : atoresEmAtividade) {
+//            System.out.println("ID: " + ator.getId());
+//            System.out.println("Nome: " + ator.getNome());
+//            System.out.println("Data Nascimento: " + ator.getDataNascimento());
+//        }
+
+
+//        System.out.println(atorService.consultarAtor(1).getNome());
+
+
+        for (Ator ator : atorService.consultarAtores()) {
+            System.out.println(ator.getNome());
+            System.out.println(ator.getDataNascimento());
+            System.out.println(ator.getStatusCarreira());
+            System.out.println(ator.getAnoInicioAtividade());
         }
 
-
-        System.out.println(atorService.consultarAtor(1).getNome());
-
+        List<Ator> atores = fakeDatabase.recuperaAtores();
         System.out.println("Deve conter 2 atores, quantidade encontrada: " + atores.size());
-        System.out.println("Primeiro ator deve ser 'Will Smith', valor encontrado: " + atores.get(0).getNome());
-        System.out.println("Segundo ator deve ser 'Leonardo DiCaprio', valor encontrado: " + atores.get(1).getNome());
+//        System.out.println("Primeiro ator deve ser 'Will Smith', valor encontrado: " + atores.get(0).getNome());
+//        System.out.println("Segundo ator deve ser 'Leonardo DiCaprio', valor encontrado: " + atores.get(1).getNome());
 
     }
 }
