@@ -1,3 +1,5 @@
+package br.com.cwi.reset.primeiroprojetospring.domain;
+
 import java.time.LocalDate;
 
 public class Ator extends Pessoa {
@@ -9,4 +11,7 @@ public class Ator extends Pessoa {
         this.numOscarsVencidos = numOscarsVencidos;
     }
 
+    public Integer getNumOscarsVencidos() {
+        return numOscarsVencidos;
+    }
 }

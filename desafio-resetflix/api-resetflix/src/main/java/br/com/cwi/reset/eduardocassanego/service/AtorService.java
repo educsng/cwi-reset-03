@@ -75,65 +75,29 @@ public class AtorService {
         System.out.println("Ator '" + ator.getNome() + "' adicionado com sucesso.");
     }
 
-    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) {
-        List<AtorEmAtividade> atorEmAtividade = new ArrayList<>();
+    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NenhumAtorCadastradoException,
+            FiltroDeAtorNaoEncontradoException {
+        List<AtorEmAtividade> retorno = new ArrayList<>();
         List<Ator> atoresEmAtividade = new ArrayList<>();
-        try {
-            if (fakeDatabase.recuperaAtores().size() <= 0) {
-                throw new NenhumAtorCadastradoException();
-            } else {
-                for (Ator ator : fakeDatabase.recuperaAtores()) {
-                    if (ator.getNome().contains(filtroNome.toLowerCase(Locale.ROOT))) {
-                        System.out.println("Encontrei com o filtro o ator " + ator.getNome());
-                        if (ator.getStatusCarreira().equals(StatusCarreira.EM_ATIVIDADE)) {
-                            atoresEmAtividade.add(ator);
-                            AtorEmAtividade atorEmAtividade1 = new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento());
-                            atorEmAtividade.add(atorEmAtividade1);
-                        } else {
-                            throw new FiltroDeAtorNaoEncontradoException(filtroNome);
-                        }
-                    } else {
-                        throw new FiltroDeAtorNaoEncontradoException(filtroNome);
+
+        if (fakeDatabase.recuperaAtores().size() == 0) {
+            throw new NenhumAtorCadastradoException();
+        }
+
+        if (filtroNome != null) {
+            for (Ator ator : fakeDatabase.recuperaAtores()) {
+                if (ator.getNome().toLowerCase(Locale.ROOT).contentEquals(filtroNome.toLowerCase(Locale.ROOT))) {
+                    if (ator.getStatusCarreira().equals(StatusCarreira.EM_ATIVIDADE)) {
+                        atoresEmAtividade.add(ator);
+                        AtorEmAtividade atorEmAtividade1 = new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento());
+                        retorno.add(atorEmAtividade1);
                     }
+                } else {
+                    throw new FiltroDeAtorNaoEncontradoException(filtroNome);
                 }
             }
-        } catch (FiltroDeAtorNaoEncontradoException | NenhumAtorCadastradoException e) {
-            System.out.println(e.getMessage());
-        }
-        return atorEmAtividade;
-    }
 
-    public Ator consultarAtor(Integer id) {
-        try {
-            if (id == null) {
-                throw new CampoObrigatorioNaoInformadoException("id");
-            } else {
-                for (Ator ator : fakeDatabase.recuperaAtores()) {
-                    if (id.equals(ator.getId())) {
-                        return ator;
-                    } else {
-                        throw new IdNaoCorrespondeException(id);
-                    }
-                }
-            }
-        } catch (CampoObrigatorioNaoInformadoException | IdNaoCorrespondeException e) {
-            System.out.println(e.getMessage());
         }
-        return null;
-    }
-
-    public List<Ator> consultarAtores() {
-        List<Ator> atoresConsultados;
-        atoresConsultados = fakeDatabase.recuperaAtores();
-        try {
-            if (atoresConsultados.isEmpty()) {
-                throw new NenhumAtorCadastradoException();
-            } else {
-                return atoresConsultados;
-            }
-        } catch (NenhumAtorCadastradoException e) {
-            System.out.println(e.getMessage());
-        }
-        return atoresConsultados;
+        return  retorno;
     }
 }

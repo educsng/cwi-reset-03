@@ -1,3 +1,5 @@
+package br.com.cwi.reset.primeiroprojetospring.domain;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -38,5 +40,9 @@ public class Pessoa {
 
     public String getNome() {
         return nome;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 }

@@ -1,3 +1,5 @@
+package br.com.cwi.reset.primeiroprojetospring.domain;
+
 public class Filme {
 
     // Atributos
@@ -11,10 +13,10 @@ public class Filme {
     // Construtor
 
 
-    public Filme(String nome, String descricao, int duracao, int ano, Double avaliacao, Diretor diretor) throws AvaliacaoForaDoPadraoException {
-        if (avaliacao < 1 || avaliacao > 5) {
-            throw new AvaliacaoForaDoPadraoException();
-        }
+    public Filme(String nome, String descricao, int duracao, int ano, Double avaliacao, Diretor diretor) {
+//        if (avaliacao < 1 || avaliacao > 5) {
+//            throw new Exception();
+//        }
 
         this.nome = nome;
         this.descricao = descricao;
@@ -30,5 +32,27 @@ public class Filme {
         System.out.println("Nome do filme: " + nome + "\nDescrição: " + descricao + "\nDuração: " + duracao + " minutos" + "\nDiretor: " + diretor.getNome());
     }
 
+    public String getNome() {
+        return nome;
+    }
 
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public int getDuracao() {
+        return duracao;
+    }
+
+    public int getAno() {
+        return ano;
+    }
+
+    public Double getAvaliacao() {
+        return avaliacao;
+    }
+
+    public Diretor getDiretor() {
+        return diretor;
+    }
 }

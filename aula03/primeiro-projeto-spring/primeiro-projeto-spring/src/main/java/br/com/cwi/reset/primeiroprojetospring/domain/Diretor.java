@@ -1,3 +1,5 @@
+package br.com.cwi.reset.primeiroprojetospring.domain;
+
 import java.time.LocalDate;
 
 public class Diretor extends Pessoa{
@@ -9,5 +11,9 @@ public class Diretor extends Pessoa{
         this.numeroFilmes = numeroFilmes;
     }
 
-
+    public Integer getNumeroFilmes() {
+        return numeroFilmes;
+    }
 }
+
+

@@ -1,3 +1,5 @@
+package br.com.cwi.reset.primeiroprojetospring.domain;
+
 public enum Genero {
     MASCULINO("Masculino"),
     FEMININO("Feminino"),

@@ -1,8 +1,11 @@
 package br.com.cwi.reset.eduardocassanego;
 
+import br.com.cwi.reset.eduardocassanego.exception.FiltroDeAtorNaoEncontradoException;
+import br.com.cwi.reset.eduardocassanego.exception.NenhumAtorCadastradoException;
 import br.com.cwi.reset.eduardocassanego.model.Ator;
 import br.com.cwi.reset.eduardocassanego.model.StatusCarreira;
 import br.com.cwi.reset.eduardocassanego.request.AtorRequest;
+import br.com.cwi.reset.eduardocassanego.response.AtorEmAtividade;
 import br.com.cwi.reset.eduardocassanego.service.AtorService;
 
 import java.time.LocalDate;
@@ -11,17 +14,20 @@ import java.util.List;
 
 public class Aplicacao {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         FakeDatabase fakeDatabase = new FakeDatabase();
 
         AtorService atorService = new AtorService(fakeDatabase);
 
         // cadastrando atores
 
-        AtorRequest atorRequest = new AtorRequest("Will Smith", LocalDate.of(1978, Month.SEPTEMBER, 25), StatusCarreira.EM_ATIVIDADE, 1986);
-        AtorRequest atorRequest2 = new AtorRequest("Leonardo", LocalDate.of(1992, Month.NOVEMBER, 11), StatusCarreira.EM_ATIVIDADE, 1991);
+        AtorRequest atorRequest = new AtorRequest("Will Smith", LocalDate.of(1978, Month.SEPTEMBER,
+                25), StatusCarreira.EM_ATIVIDADE, 1986);
+        AtorRequest atorRequest2 = new AtorRequest("Leonardo Dicaprio", LocalDate.of(1972, Month.NOVEMBER,
+                11), StatusCarreira.EM_ATIVIDADE, 1991);
 
 
+        //Teste para criar atores
         try {
             atorService.criarAtor(atorRequest);
             atorService.criarAtor(atorRequest2);
@@ -30,14 +36,18 @@ public class Aplicacao {
         }
 
 
-
         //Teste para listar ator em atividade
-//        List<AtorEmAtividade> atoresEmAtividade = atorService.listarAtoresEmAtividade("k");
-//        for (AtorEmAtividade ator : atoresEmAtividade) {
-//            System.out.println("ID: " + ator.getId());
-//            System.out.println("Nome: " + ator.getNome());
-//            System.out.println("Data Nascimento: " + ator.getDataNascimento());
-//        }
+        try {
+            List<AtorEmAtividade> atoresEmAtividade = atorService.listarAtoresEmAtividade("caprio");
+            for (AtorEmAtividade ator : atoresEmAtividade) {
+                System.out.println("ID: " + ator.getId());
+                System.out.println("Nome: " + ator.getNome());
+                System.out.println("Data Nascimento: " + ator.getDataNascimento());
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
 
         //Teste para consultar ator por ID
 //        System.out.println(atorService.consultarAtor(1).getNome());
