@@ -1,39 +1,37 @@
 package br.com.cwi.reset.eduardocassanego;
 
+import br.com.cwi.reset.eduardocassanego.model.Ator;
+import br.com.cwi.reset.eduardocassanego.model.StatusCarreira;
+import br.com.cwi.reset.eduardocassanego.request.AtorRequest;
+import br.com.cwi.reset.eduardocassanego.service.AtorService;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
-import java.util.Locale;
 
 public class Aplicacao {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         FakeDatabase fakeDatabase = new FakeDatabase();
 
         AtorService atorService = new AtorService(fakeDatabase);
 
         // cadastrando atores
-        String nome = "Will Smith";
-        LocalDate dataNascimento = LocalDate.of(1978, Month.SEPTEMBER, 25);
-        StatusCarreira statusCarreira = StatusCarreira.EM_ATIVIDADE;
-        Integer anoInicioAtividade = 1986;
+
+        AtorRequest atorRequest = new AtorRequest("Will Smith", LocalDate.of(1978, Month.SEPTEMBER, 25), StatusCarreira.EM_ATIVIDADE, 1986);
+        AtorRequest atorRequest2 = new AtorRequest("Leonardo", LocalDate.of(1992, Month.NOVEMBER, 11), StatusCarreira.EM_ATIVIDADE, 1991);
 
 
-        String nome2 = "Leonardo DiCaprio";
-        LocalDate dataNascimento2 = LocalDate.of(1965, Month.JANUARY, 22);
-        StatusCarreira statusCarreira2 = StatusCarreira.EM_ATIVIDADE;
-        Integer anoInicioAtividade2 = 2000;
-
-
-        AtorRequest atorRequest = new AtorRequest(nome, dataNascimento, statusCarreira, anoInicioAtividade);
-        AtorRequest atorRequest2 = new AtorRequest(nome2, dataNascimento2, statusCarreira2, anoInicioAtividade2);
-
-
-        atorService.criarAtor(atorRequest);
-        atorService.criarAtor(atorRequest2);
+        try {
+            atorService.criarAtor(atorRequest);
+            atorService.criarAtor(atorRequest2);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
 
 
+        //Teste para listar ator em atividade
 //        List<AtorEmAtividade> atoresEmAtividade = atorService.listarAtoresEmAtividade("k");
 //        for (AtorEmAtividade ator : atoresEmAtividade) {
 //            System.out.println("ID: " + ator.getId());
@@ -41,20 +39,23 @@ public class Aplicacao {
 //            System.out.println("Data Nascimento: " + ator.getDataNascimento());
 //        }
 
-
+        //Teste para consultar ator por ID
 //        System.out.println(atorService.consultarAtor(1).getNome());
 
 
-        for (Ator ator : atorService.consultarAtores()) {
-            System.out.println(ator.getNome());
-            System.out.println(ator.getDataNascimento());
-            System.out.println(ator.getStatusCarreira());
-            System.out.println(ator.getAnoInicioAtividade());
-        }
+        // Teste para consultar todos os atores
+//        for (Ator ator : atorService.consultarAtores()) {
+//            System.out.println(ator.getNome());
+//            System.out.println(ator.getDataNascimento());
+//            System.out.println(ator.getStatusCarreira());
+//            System.out.println(ator.getAnoInicioAtividade());
+//        }
+
+
 
         List<Ator> atores = fakeDatabase.recuperaAtores();
-        System.out.println("Deve conter 2 atores, quantidade encontrada: " + atores.size());
-//        System.out.println("Primeiro ator deve ser 'Will Smith', valor encontrado: " + atores.get(0).getNome());
+        System.out.println("Deve conter 1 ator, quantidade encontrada: " + atores.size());
+        System.out.println("Primeiro ator deve ser 'Will Smith', valor encontrado: " + atores.get(0).getNome());
 //        System.out.println("Segundo ator deve ser 'Leonardo DiCaprio', valor encontrado: " + atores.get(1).getNome());
 
     }

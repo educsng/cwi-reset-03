@@ -1,4 +1,4 @@
-package br.com.cwi.reset.eduardocassanego;
+package br.com.cwi.reset.eduardocassanego.response;
 
 import java.time.LocalDate;
 

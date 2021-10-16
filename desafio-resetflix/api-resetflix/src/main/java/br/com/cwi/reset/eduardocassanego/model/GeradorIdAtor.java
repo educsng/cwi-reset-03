@@ -1,4 +1,4 @@
-package br.com.cwi.reset.eduardocassanego;
+package br.com.cwi.reset.eduardocassanego.model;
 
 public class GeradorIdAtor {
     private static Integer id = 1;

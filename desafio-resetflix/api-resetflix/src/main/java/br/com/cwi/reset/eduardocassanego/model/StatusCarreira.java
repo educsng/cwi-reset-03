@@ -1,4 +1,4 @@
-package br.com.cwi.reset.eduardocassanego;
+package br.com.cwi.reset.eduardocassanego.model;
 
 public enum StatusCarreira {
     EM_ATIVIDADE("Em atividade"),
