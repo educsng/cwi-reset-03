@@ -32,6 +32,7 @@ public class Filme {
         System.out.println("Nome do filme: " + nome + "\nDescrição: " + descricao + "\nDuração: " + duracao + " minutos" + "\nDiretor: " + diretor.getNome());
     }
 
+    // Getters e setters
     public String getNome() {
         return nome;
     }
@@ -54,5 +55,29 @@ public class Filme {
 
     public Diretor getDiretor() {
         return diretor;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setDuracao(int duracao) {
+        this.duracao = duracao;
+    }
+
+    public void setAno(int ano) {
+        this.ano = ano;
+    }
+
+    public void setAvaliacao(Double avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    public void setDiretor(Diretor diretor) {
+        this.diretor = diretor;
     }
 }

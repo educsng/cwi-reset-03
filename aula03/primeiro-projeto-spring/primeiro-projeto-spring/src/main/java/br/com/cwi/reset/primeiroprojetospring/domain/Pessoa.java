@@ -33,7 +33,7 @@ public class Pessoa {
 
 
 
-    // Getters
+    // Getters e setters
     public Genero getGenero() {
         return genero;
     }
@@ -44,5 +44,17 @@ public class Pessoa {
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public void setGenero(Genero genero) {
+        this.genero = genero;
     }
 }

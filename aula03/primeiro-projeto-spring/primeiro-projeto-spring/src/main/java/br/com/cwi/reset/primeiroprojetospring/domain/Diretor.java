@@ -11,8 +11,13 @@ public class Diretor extends Pessoa{
         this.numeroFilmes = numeroFilmes;
     }
 
+    // Getters e setters
     public Integer getNumeroFilmes() {
         return numeroFilmes;
+    }
+
+    public void setNumeroFilmes(Integer numeroFilmes) {
+        this.numeroFilmes = numeroFilmes;
     }
 }
 
