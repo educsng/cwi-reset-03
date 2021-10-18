@@ -32,24 +32,22 @@ public class AtorService {
             AnoInicioAtividadeMenorQueDataAtualException,
             NomeJaExistenteException {
 
+        // VERIFICAÇÕES
         // Campos obrigatórios
         verificaCampoObrigatorio(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
-
         // Nome e sobrenome
         if (!atorRequest.getNome().contains(" ")) {
-            throw new DeveConterNomeESobrenomeException();
+            throw new DeveConterNomeESobrenomeException("ator.");
         }
-
         // Data de nascimento menor que data atual
         LocalDate now = LocalDate.now();
         if (now.isBefore(atorRequest.getDataNascimento())) {
-            throw new DataNascimentoMaiorQueDataAtualException();
+            throw new DataNascimentoMaiorQueDataAtualException("atores");
         }
-
         // Ano inicio atividade
         Integer anoNascimentoAtor = atorRequest.getDataNascimento().getYear();
         if (atorRequest.getAnoInicioAtividade() < anoNascimentoAtor) {
-            throw new AnoInicioAtividadeMenorQueDataAtualException();
+            throw new AnoInicioAtividadeMenorQueDataAtualException("ator");
         }
 
         // Ator de mesmo nome
@@ -58,7 +56,7 @@ public class AtorService {
 
         for (Ator ator : atores) {
             if (ator.getNome().equalsIgnoreCase(atorRequest.getNome())) {
-                throw new NomeJaExistenteException(atorRequest.getNome());
+                throw new NomeJaExistenteException("ator", atorRequest.getNome());
             }
         }
 
@@ -68,12 +66,12 @@ public class AtorService {
         System.out.println("Ator '" + ator.getNome() + "' adicionado com sucesso.");
     }
 
-    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NenhumAtorCadastradoException,
-            FiltroDeAtorNaoEncontradoException {
+    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NenhumObjetoCadastradoException,
+            FiltroDeObjetoNaoEncontradoException {
         List<AtorEmAtividade> retorno = new ArrayList<>();
 
         if (verificaAtorBancoDeDadosVazio(fakeDatabase.recuperaAtores())) {
-            throw new NenhumAtorCadastradoException();
+            throw new NenhumObjetoCadastradoException("ator");
         }
 
         if (filtroNome != null) {
@@ -85,7 +83,7 @@ public class AtorService {
                         retorno.add(atorEmAtividade1);
                     }
                 } else {
-                    throw new FiltroDeAtorNaoEncontradoException(filtroNome);
+                    throw new FiltroDeObjetoNaoEncontradoException("Ator", filtroNome);
                 }
             }
 
@@ -110,15 +108,15 @@ public class AtorService {
             throw new CampoObrigatorioNaoInformadoException("id");
         }
 
-        if (exception) { throw new IdNaoCorrespondeException(id); }
+        if (exception) { throw new IdNaoCorrespondeException("ator", id); }
         return null;
     }
 
 
-    public List<Ator> consultarAtores() throws NenhumAtorCadastradoException {
+    public List<Ator> consultarAtores() throws NenhumObjetoCadastradoException {
         List<Ator> atoresConsultados = fakeDatabase.recuperaAtores();
         if (verificaAtorBancoDeDadosVazio(atoresConsultados)) {
-            throw new NenhumAtorCadastradoException();
+            throw new NenhumObjetoCadastradoException("ator");
         } else {
             return atoresConsultados;
         }
@@ -126,7 +124,7 @@ public class AtorService {
 
 
 
-    //    Outros métodos
+    // Métodos auxiliares
     public void verificaCampoObrigatorio(String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) throws
             NomeCampoObrigatorioNaoInformadoException,
             DataNascimentoCampoObrigatorioNaoInformadoException,
