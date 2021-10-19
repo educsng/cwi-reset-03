@@ -65,7 +65,6 @@ public class AtorService {
         // Após todas as verificações, instancia o objeto Ator e persiste na fakedatabase
         Ator ator = new Ator(GeradorIdAtor.proximoId(), atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
         fakeDatabase.persisteAtor(ator);
-        System.out.println("Ator '" + ator.getNome() + "' adicionado com sucesso.");
     }
 
     public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NenhumObjetoCadastradoException,

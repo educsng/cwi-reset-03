@@ -16,6 +16,7 @@ public class DiretorService {
     // Atributos
     private FakeDatabase fakeDatabase;
 
+    //Construtor
     public DiretorService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
     }
@@ -36,7 +37,7 @@ public class DiretorService {
         verificaCampoObrigatorio(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
         // Mesmo Nome e sobrenome
         if (!diretorRequest.getNome().contains(" ")) {
-            throw new DeveConterNomeESobrenomeException("diretor.");
+            throw new DeveConterNomeESobrenomeException("diretor");
         }
         // Data Nascimento menor que data atual
         LocalDate now = LocalDate.now();
@@ -60,8 +61,6 @@ public class DiretorService {
         // Após todas as verificações, instancia o objeto Diretor e persiste na fakedatabase
         Diretor diretor = new Diretor(GeradorIdDiretor.proximoId(), diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
         fakeDatabase.persisteDiretor(diretor);
-        System.out.println("Ator '" + diretor.getNome() + "' adicionado com sucesso.");
-
     }
 
     public List<Diretor> listarDiretores(String filtroNome) throws
