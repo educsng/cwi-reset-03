@@ -93,7 +93,10 @@ public class AtorService {
     }
 
 
-    public Ator consultarAtor(Integer id) throws IdNaoCorrespondeException, CampoObrigatorioNaoInformadoException {
+    public Ator consultarAtor(Integer id) throws
+            IdNaoCorrespondeException,
+            CampoObrigatorioNaoInformadoException {
+
         List<Ator> atores = fakeDatabase.recuperaAtores();
         boolean exception = false;
 

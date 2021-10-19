@@ -1,36 +1,26 @@
-package br.com.cwi.reset.eduardocassanego.model;
+package br.com.cwi.reset.eduardocassanego.request;
+
+import br.com.cwi.reset.eduardocassanego.model.StatusAtividade;
 
 import java.time.LocalDate;
 
-public class Estudio {
+public class EstudioRequest {
 
     // Atributos
-    private Integer id;
     private String nome;
     private String descricao;
     private LocalDate dataCriacao;
     private StatusAtividade statusAtividade;
 
     // Construtor
-    public Estudio(Integer id, String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade) {
-        this.id = id;
+    public EstudioRequest(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade) {
         this.nome = nome;
         this.descricao = descricao;
         this.dataCriacao = dataCriacao;
         this.statusAtividade = statusAtividade;
     }
 
-    // Getters e Setters
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+    //Getters e setters
     public String getNome() {
         return nome;
     }
