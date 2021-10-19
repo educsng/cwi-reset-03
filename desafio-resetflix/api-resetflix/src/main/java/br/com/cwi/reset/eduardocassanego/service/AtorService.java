@@ -7,6 +7,8 @@ import br.com.cwi.reset.eduardocassanego.model.GeradorIdAtor;
 import br.com.cwi.reset.eduardocassanego.model.StatusCarreira;
 import br.com.cwi.reset.eduardocassanego.request.AtorRequest;
 import br.com.cwi.reset.eduardocassanego.response.AtorEmAtividade;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class AtorService {
         verificaCampoObrigatorio(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
         // Nome e sobrenome
         if (!atorRequest.getNome().contains(" ")) {
-            throw new DeveConterNomeESobrenomeException("ator.");
+            throw new DeveConterNomeESobrenomeException("ator");
         }
         // Data de nascimento menor que data atual
         LocalDate now = LocalDate.now();
