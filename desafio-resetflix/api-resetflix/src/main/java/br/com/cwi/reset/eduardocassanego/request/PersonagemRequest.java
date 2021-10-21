@@ -1,4 +1,6 @@
-package br.com.cwi.reset.eduardocassanego.model;
+package br.com.cwi.reset.eduardocassanego.request;
+
+import br.com.cwi.reset.eduardocassanego.model.TipoAtuacao;
 
 public class PersonagemRequest {
 

@@ -1,7 +1,6 @@
 package br.com.cwi.reset.eduardocassanego.request;
 
 import br.com.cwi.reset.eduardocassanego.model.Genero;
-import br.com.cwi.reset.eduardocassanego.model.PersonagemRequest;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -6,7 +6,7 @@ import br.com.cwi.reset.eduardocassanego.exception.IdNaoCorrespondeException;
 import br.com.cwi.reset.eduardocassanego.exception.PersonagemDeMesmoNomeEIDException;
 import br.com.cwi.reset.eduardocassanego.model.Ator;
 import br.com.cwi.reset.eduardocassanego.model.PersonagemAtor;
-import br.com.cwi.reset.eduardocassanego.model.PersonagemRequest;
+import br.com.cwi.reset.eduardocassanego.request.PersonagemRequest;
 import br.com.cwi.reset.eduardocassanego.model.TipoAtuacao;
 
 import java.util.List;
@@ -55,8 +55,6 @@ public class PersonagemService {
         PersonagemAtor personagemAtor = new PersonagemAtor(personagemRequest.getIdAtor(), personagemRequest.getNomePersonagem(), personagemRequest.getDescricaoPersonagem(), personagemRequest.getTipoAtuacao());
         fakeDatabase.persistePersonagem(personagemAtor);
     }
-
-
 
     // métodos auxiliares
     public void verificaCamposObrigatorios(Integer idAtor, String nomePersonagem, String descricaoPersonagem, TipoAtuacao tipoAtuacao) throws CampoObrigatorioNaoInformadoException {

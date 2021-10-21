@@ -4,10 +4,12 @@ import br.com.cwi.reset.eduardocassanego.FakeDatabase;
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.*;
 import br.com.cwi.reset.eduardocassanego.request.FilmeRequest;
+import br.com.cwi.reset.eduardocassanego.request.PersonagemRequest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class FilmeService {
@@ -65,7 +67,7 @@ public class FilmeService {
         List<Genero> generos = filmeRequest.getGeneros();
         if (generos.size() < 1) {
             throw new NumeroDeGeneroInvalidoException();
-        } else if (generos.size() > 1){
+        } else if (generos.size() > 1) {
             for (int i = 0; i < generos.size() - 1; i++) {
                 for (int j = 1; j < generos.size(); j++) {
                     if (Objects.equals(generos.get(i).getDescricao(), generos.get(j + 1).getDescricao())) {
@@ -77,10 +79,51 @@ public class FilmeService {
 
         Diretor diretor = diretorService.consultarDiretor(filmeRequest.getIdDiretor());
         Estudio estudio = estudioService.consultarEstudioPorID(filmeRequest.getIdEstudio());
-        List<PersonagemAtor> personagens = fakeDatabase.recuperaPersonagens();
-
-        // precisa reber no ultimo campo um List<PersonagemAtor>
+        List<PersonagemAtor> personagens = new ArrayList<>();
+        for (PersonagemRequest personagemRequest : filmeRequest.getPersonagens()) {
+            personagens.add(new PersonagemAtor(personagemRequest.getIdAtor(), personagemRequest.getNomePersonagem(), personagemRequest.getDescricaoPersonagem(), personagemRequest.getTipoAtuacao()));
+        }
         Filme filme = new Filme(GeradorIdFilme.proximoId(), filmeRequest.getNome(), filmeRequest.getAnoLancamento(), filmeRequest.getCapaFilme(), filmeRequest.getGeneros(), diretor, estudio, personagens, filmeRequest.getResumo());
+        fakeDatabase.persisteFilme(filme);
+    }
+
+    public List<Filme> consultarFilmes(String nomeFilme, String nomeDiretor, String nomePersonagem, String nomeAtor) throws NenhumFilmeCadastradoException {
+        List<Filme> filmes = fakeDatabase.recuperaFilmes();
+        List<Filme> filmesEncontrados = new ArrayList<>();
+
+        if (filmes.isEmpty()) {
+            throw new NenhumFilmeCadastradoException();
+        }
+
+        boolean verificaNomeFilme = false;
+        boolean verificaNomeDiretor = false;
+        boolean verificaNomePersonagem = false;
+        boolean verificaNomeAtor = false;
+
+        if (nomeFilme == null && nomeDiretor == null && nomePersonagem == null && nomeAtor == null) {
+            return filmes;
+        } else {
+            if (nomeFilme != null) {
+                for (Filme filme : filmes) {
+                    if (filme.getNome().toLowerCase(Locale.ROOT).contains(nomeFilme.toLowerCase(Locale.ROOT))) {
+                        filmesEncontrados.add(filme);
+                    }
+                }
+            }
+            if (nomeDiretor != null) {
+                for (Filme filme : filmes) {
+                    if (filme.getDiretor().getNome().toLowerCase(Locale.ROOT).contains(nomeDiretor.toLowerCase(Locale.ROOT))) {
+                        filmesEncontrados.add(filme);
+                    }
+                }
+            }
+//            if (nomePersonagem != null) {
+//                List<PersonagemAtor> personagens = fakeDatabase.recuperaPersonagens();
+//                for (Filme filme : filmes) {
+//                }
+//            }
+        }
+        return filmesEncontrados;
     }
 
 
