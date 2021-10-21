@@ -1,6 +1,6 @@
 package br.com.cwi.reset.eduardocassanego.model;
 
-public class PersonagemAtor {
+public class PersonagemRequest {
 
     //Atributos
     private Integer idAtor;
@@ -9,7 +9,7 @@ public class PersonagemAtor {
     private TipoAtuacao tipoAtuacao;
 
     // Construtor
-    public PersonagemAtor(Integer idAtor, String nomePersonagem, String descricaoPersonagem, TipoAtuacao tipoAtuacao) {
+    public PersonagemRequest(Integer idAtor, String nomePersonagem, String descricaoPersonagem, TipoAtuacao tipoAtuacao) {
         this.idAtor = idAtor;
         this.nomePersonagem = nomePersonagem;
         this.descricaoPersonagem = descricaoPersonagem;

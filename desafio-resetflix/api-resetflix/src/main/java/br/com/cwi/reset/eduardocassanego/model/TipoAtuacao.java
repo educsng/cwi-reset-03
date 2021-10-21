@@ -1,12 +1,12 @@
 package br.com.cwi.reset.eduardocassanego.model;
 
-public enum StatusAtividade {
-    EM_ATIVIDADE("Em atividade"),
-    ENCERRADO("Encerrado");
+public enum TipoAtuacao {
+    PRINCIPAL("Principal"),
+    COADJUVANTE("Coadjuvante");
 
     private String descricao;
 
-    StatusAtividade(String descricao) {
+    TipoAtuacao(String descricao) {
         this.descricao = descricao;
     }
 
