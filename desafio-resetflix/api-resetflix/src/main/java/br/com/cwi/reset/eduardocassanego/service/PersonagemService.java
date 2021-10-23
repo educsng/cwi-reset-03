@@ -1,16 +1,13 @@
 package br.com.cwi.reset.eduardocassanego.service;
 
 import br.com.cwi.reset.eduardocassanego.FakeDatabase;
-import br.com.cwi.reset.eduardocassanego.exception.CampoObrigatorioNaoInformadoException;
-import br.com.cwi.reset.eduardocassanego.exception.IdNaoCorrespondeException;
-import br.com.cwi.reset.eduardocassanego.exception.PersonagemDeMesmoNomeEIDException;
+import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.Ator;
 import br.com.cwi.reset.eduardocassanego.model.PersonagemAtor;
 import br.com.cwi.reset.eduardocassanego.request.PersonagemRequest;
 import br.com.cwi.reset.eduardocassanego.model.TipoAtuacao;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class PersonagemService {
 
@@ -23,22 +20,7 @@ public class PersonagemService {
     }
 
     //Demais métodos
-    public void criarPersonagemAtor(PersonagemRequest personagemRequest) throws PersonagemDeMesmoNomeEIDException, CampoObrigatorioNaoInformadoException, IdNaoCorrespondeException {
-
-        //verificando campos obrigatórios
-        verificaCamposObrigatorios(personagemRequest.getIdAtor(), personagemRequest.getNomePersonagem(), personagemRequest.getDescricaoPersonagem(), personagemRequest.getTipoAtuacao());
-
-        //verificando a existência de personagem de mesmo nome e mesmo ator já cadastrado
-        List<PersonagemAtor> listaDePersonagens = fakeDatabase.recuperaPersonagens();
-
-        if (!listaDePersonagens.isEmpty()) {
-            for (PersonagemAtor personagem : listaDePersonagens) {
-                if (personagem.getNomePersonagem().equalsIgnoreCase(personagemRequest.getNomePersonagem()) && personagem.getIdAtor().equals(personagemRequest.getIdAtor())) {
-                    throw new PersonagemDeMesmoNomeEIDException();
-                }
-            }
-        }
-
+    public PersonagemAtor cadastrarPersonagemAtor(PersonagemRequest personagemRequest) throws Exception {
         // verificar se existe ator com Id passado pelo request
         List<Ator> atores = fakeDatabase.recuperaAtores();
         boolean verificacao = false;
@@ -51,9 +33,32 @@ public class PersonagemService {
         if (!verificacao) {
             throw new IdNaoCorrespondeException("ator", personagemRequest.getIdAtor());
         }
-
         PersonagemAtor personagemAtor = new PersonagemAtor(personagemRequest.getIdAtor(), personagemRequest.getNomePersonagem(), personagemRequest.getDescricaoPersonagem(), personagemRequest.getTipoAtuacao());
         fakeDatabase.persistePersonagem(personagemAtor);
+        return personagemAtor;
+    }
+
+    public List<PersonagemAtor> criarPersonagemFilme(List<PersonagemRequest> personagens) throws Exception {
+        Set<PersonagemRequest> listaDePersonagens = new HashSet<>();
+        List<PersonagemAtor> personagensFilme = new ArrayList<>();
+        PersonagemAtor personagemCriado = null;
+
+        //verificações
+        for (PersonagemRequest personagemRequest : personagens) {
+            // verificando campos obrigatórios
+            verificaCamposObrigatorios(personagemRequest.getIdAtor(), personagemRequest.getNomePersonagem(), personagemRequest.getDescricaoPersonagem(), personagemRequest.getTipoAtuacao());
+
+            //verificando a existência de personagem de mesmo nome e mesmo ator já cadastrado
+            if (listaDePersonagens.contains(personagemRequest)) {
+                throw new PersonagemDeMesmoNomeEIDException();
+            } else {
+                listaDePersonagens.add(personagemRequest);
+            }
+
+            personagemCriado = cadastrarPersonagemAtor(personagemRequest);
+            personagensFilme.add(personagemCriado);
+        }
+        return personagensFilme;
     }
 
     // métodos auxiliares
@@ -84,5 +89,4 @@ public class PersonagemService {
     public boolean verificaCampoTipoAtuacao(TipoAtuacao campo) {
         return campo == null;
     }
-
 }

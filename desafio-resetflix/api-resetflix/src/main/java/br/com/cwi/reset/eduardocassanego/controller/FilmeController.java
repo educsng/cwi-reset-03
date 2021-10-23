@@ -28,7 +28,11 @@ public class FilmeController {
 
     @GetMapping
     @ResponseBody
-    public List<Filme> consultarFilmes(String nomeFilme, String nomeDiretor, String nomePersonagem, String nomeAtor) throws Exception {
+    public List<Filme> consultarFilmes(
+            @RequestParam String nomeFilme,
+            @RequestParam String nomeDiretor,
+            @RequestParam String nomePersonagem,
+            @RequestParam String nomeAtor) throws Exception {
         return filmeService.consultarFilmes(nomeFilme, nomeDiretor, nomePersonagem, nomeAtor);
     }
 

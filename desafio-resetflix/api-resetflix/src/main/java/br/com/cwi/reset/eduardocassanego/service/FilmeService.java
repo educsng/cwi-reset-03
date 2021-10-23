@@ -7,10 +7,7 @@ import br.com.cwi.reset.eduardocassanego.request.FilmeRequest;
 import br.com.cwi.reset.eduardocassanego.request.PersonagemRequest;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 public class FilmeService {
 
@@ -31,24 +28,12 @@ public class FilmeService {
     }
 
     // Demais métodos da classe
-    public void criarFilme(FilmeRequest filmeRequest) throws CampoObrigatorioNaoInformadoException, IdNaoCorrespondeException, NumeroDeGeneroInvalidoException, MesmoGeneroParaOMesmoFilmeException, NenhumEstudioCadastradoException {
+    public void criarFilme(FilmeRequest filmeRequest) throws Exception {
 
         //verificando campos obrigatórios
         verificaCampoObrigatorio(filmeRequest.getNome(),
                 filmeRequest.getAnoLancamento(), filmeRequest.getCapaFilme(), filmeRequest.getGeneros(), filmeRequest.getIdDiretor(), filmeRequest.getIdEstudio(), filmeRequest.getResumo(), filmeRequest.getPersonagens());
 
-        //verificando ID estúdio
-        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
-
-        boolean idEstudioEncontrado = false;
-        for (Estudio estudio : estudios) {
-            if (Objects.equals(filmeRequest.getIdEstudio(), estudio.getId())) {
-                idEstudioEncontrado = true;
-            }
-        }
-        if (!idEstudioEncontrado) {
-            throw new IdNaoCorrespondeException("estúdio", filmeRequest.getIdEstudio());
-        }
 
         //verificando ID diretor
         List<Diretor> diretores = fakeDatabase.recuperaDiretores();
@@ -63,42 +48,55 @@ public class FilmeService {
             throw new IdNaoCorrespondeException("diretor", filmeRequest.getIdDiretor());
         }
 
-        //verificando a existência de pelo menos um gênero
-        List<Genero> generos = filmeRequest.getGeneros();
-        if (generos.size() < 1) {
+        //verificando ID estúdio
+        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
+
+        boolean idEstudioEncontrado = false;
+        for (Estudio estudio : estudios) {
+            if (Objects.equals(filmeRequest.getIdEstudio(), estudio.getId())) {
+                idEstudioEncontrado = true;
+            }
+        }
+        if (!idEstudioEncontrado) {
+            throw new IdNaoCorrespondeException("estúdio", filmeRequest.getIdEstudio());
+        }
+
+        //verificando se existe pelos menos um gênero na lista
+        if (filmeRequest.getGeneros().isEmpty()) {
             throw new NumeroDeGeneroInvalidoException();
-        } else if (generos.size() > 1) {
-            for (int i = 0; i < generos.size() - 1; i++) {
-                for (int j = 1; j < generos.size(); j++) {
-                    if (Objects.equals(generos.get(i).getDescricao(), generos.get(j + 1).getDescricao())) {
-                        throw new MesmoGeneroParaOMesmoFilmeException();
-                    }
-                }
+        }
+
+        //verificando a existência de generos repetidos
+        Set<Genero> generoSet = new HashSet<>();
+
+        for (Genero genero : filmeRequest.getGeneros()) {
+            if (generoSet.contains(genero)) {
+                throw new MesmoGeneroParaOMesmoFilmeException();
+            } else {
+                generoSet.add(genero);
             }
         }
 
         Diretor diretor = diretorService.consultarDiretor(filmeRequest.getIdDiretor());
         Estudio estudio = estudioService.consultarEstudioPorID(filmeRequest.getIdEstudio());
-        List<PersonagemAtor> personagens = new ArrayList<>();
-        for (PersonagemRequest personagemRequest : filmeRequest.getPersonagens()) {
-            personagens.add(new PersonagemAtor(personagemRequest.getIdAtor(), personagemRequest.getNomePersonagem(), personagemRequest.getDescricaoPersonagem(), personagemRequest.getTipoAtuacao()));
-        }
+
+        List<PersonagemAtor> personagens = personagemService.criarPersonagemFilme(filmeRequest.getPersonagens());
         Filme filme = new Filme(GeradorIdFilme.proximoId(), filmeRequest.getNome(), filmeRequest.getAnoLancamento(), filmeRequest.getCapaFilme(), filmeRequest.getGeneros(), diretor, estudio, personagens, filmeRequest.getResumo());
         fakeDatabase.persisteFilme(filme);
     }
 
-    public List<Filme> consultarFilmes(String nomeFilme, String nomeDiretor, String nomePersonagem, String nomeAtor) throws NenhumFilmeCadastradoException {
+    public List<Filme> consultarFilmes(String nomeFilme, String nomeDiretor, String nomePersonagem, String nomeAtor) throws NenhumFilmeCadastradoException, CampoObrigatorioNaoInformadoException {
         List<Filme> filmes = fakeDatabase.recuperaFilmes();
         List<Filme> filmesEncontrados = new ArrayList<>();
-
-        if (filmes.isEmpty()) {
-            throw new NenhumFilmeCadastradoException();
-        }
-
+        List<Filme> filmesEncontradosFiltrados = new ArrayList<>();
         boolean verificaNomeFilme = false;
         boolean verificaNomeDiretor = false;
         boolean verificaNomePersonagem = false;
         boolean verificaNomeAtor = false;
+
+        if (filmes.isEmpty()) {
+            throw new NenhumFilmeCadastradoException();
+        }
 
         if (nomeFilme == null && nomeDiretor == null && nomePersonagem == null && nomeAtor == null) {
             return filmes;
@@ -107,6 +105,8 @@ public class FilmeService {
                 for (Filme filme : filmes) {
                     if (filme.getNome().toLowerCase(Locale.ROOT).contains(nomeFilme.toLowerCase(Locale.ROOT))) {
                         filmesEncontrados.add(filme);
+                    } else {
+                        verificaNomeFilme = true;
                     }
                 }
             }
@@ -114,19 +114,53 @@ public class FilmeService {
                 for (Filme filme : filmes) {
                     if (filme.getDiretor().getNome().toLowerCase(Locale.ROOT).contains(nomeDiretor.toLowerCase(Locale.ROOT))) {
                         filmesEncontrados.add(filme);
+                    } else {
+                        verificaNomeDiretor = true;
                     }
                 }
             }
-//            if (nomePersonagem != null) {
-//                List<PersonagemAtor> personagens = fakeDatabase.recuperaPersonagens();
-//                for (Filme filme : filmes) {
-//                }
-//            }
+            if (nomePersonagem != null) {
+                List<PersonagemAtor> personagens = fakeDatabase.recuperaPersonagens();
+                boolean personagemEncontrado = false;
+                PersonagemAtor personagemComNomeIgual = null;
+
+                for (PersonagemAtor personagemAtor : personagens) {
+                    if (personagemAtor.getNomePersonagem().contains(nomePersonagem)) {
+                        personagemEncontrado = true;
+                        personagemComNomeIgual = personagemAtor;
+                    } else {
+                        verificaNomeAtor = true;
+                    }
+                }
+                if (personagemEncontrado) {
+                    for (Filme filme : filmes) {
+                        for (PersonagemAtor personagem : filme.getPersonagens()) {
+                            if (personagem.getNomePersonagem().equalsIgnoreCase(personagemComNomeIgual.getNomePersonagem())) {
+                                filmesEncontrados.add(filme);
+                            } else {
+                                verificaNomePersonagem = true;
+                            }
+                        }
+                    }
+                }
+
+            }
         }
-        return filmesEncontrados;
+        Set<Filme> filmesSet = new HashSet<>();
+
+        for (Filme filme : filmesEncontrados) {
+            if (!filmesSet.equals(filme)) {
+                filmesEncontradosFiltrados.add(filme);
+            }
+        }
+        if (filmesEncontradosFiltrados.isEmpty()) {
+            filmesEncontradosFiltrados = filmes;
+        }
+        if (verificaNomeFilme && verificaNomeDiretor && verificaNomeAtor && verificaNomePersonagem) {
+            throw new CampoObrigatorioNaoInformadoException("filtros de nomes");
+        }
+        return filmesEncontradosFiltrados;
     }
-
-
 
     // Métodos auxiliares
     public void verificaCampoObrigatorio(String nome, LocalDate anoLancamento, String capaFilme, List<Genero> genereos,
@@ -165,6 +199,5 @@ public class FilmeService {
     public boolean verificaCampoObrigatorioIdEstudio(Integer campo) {return campo == null;}
     public boolean verificaCampoObrigatorioResumo(String campo) {return campo == null;}
     public boolean verificaCampoObrigatorioPersonagens(List<PersonagemRequest> campo) {return campo == null;}
-
 
 }

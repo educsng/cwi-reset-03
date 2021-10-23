@@ -2,6 +2,8 @@ package br.com.cwi.reset.eduardocassanego.request;
 
 import br.com.cwi.reset.eduardocassanego.model.TipoAtuacao;
 
+import java.util.Objects;
+
 public class PersonagemRequest {
 
     //Atributos
@@ -49,5 +51,22 @@ public class PersonagemRequest {
 
     public void setTipoAtuacao(TipoAtuacao tipoAtuacao) {
         this.tipoAtuacao = tipoAtuacao;
+    }
+
+
+
+    // sobreescrevendo equals e hashcode
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PersonagemRequest that = (PersonagemRequest) o;
+        return Objects.equals(idAtor, that.idAtor) && Objects.equals(nomePersonagem, that.nomePersonagem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idAtor, nomePersonagem);
     }
 }
