@@ -1,17 +1,21 @@
 package br.com.cwi.reset.projeto1.service;
 
-import br.com.cwi.reset.projeto1.domain.Filme;
 import br.com.cwi.reset.projeto1.domain.Pet;
 import br.com.cwi.reset.projeto1.exception.FilmeNaoExistenteException;
 import br.com.cwi.reset.projeto1.exception.PetJaExistenteException;
 import br.com.cwi.reset.projeto1.exception.PetNaoExistenteException;
 import br.com.cwi.reset.projeto1.repository.PetRepository;
+import br.com.cwi.reset.projeto1.repository.PetRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PetService {
 
-    private PetRepository petRepository = new PetRepository();
+    @Autowired
+    private PetRepository petRepository;
 
     public Pet salvarPet(Pet pet) throws PetJaExistenteException {
         Pet petJaExistente = petRepository.findByNome(pet.getNome());
