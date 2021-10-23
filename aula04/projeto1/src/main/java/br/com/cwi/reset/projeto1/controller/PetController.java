@@ -30,6 +30,11 @@ public class PetController {
         return petService.buscarPetPorNome(nome);
     }
 
+    @GetMapping("/{idade}")
+    public Pet getById(@PathVariable Integer idade) {
+        return petService.buscarPorIdade(idade);
+    }
+
     @PostMapping
     public Pet cadastrarPet(@RequestBody Pet pet) throws PetJaExistenteException {
         return petService.salvarPet(pet);

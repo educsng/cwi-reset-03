@@ -4,8 +4,7 @@ import br.com.cwi.reset.projeto1.domain.Pet;
 import br.com.cwi.reset.projeto1.exception.FilmeNaoExistenteException;
 import br.com.cwi.reset.projeto1.exception.PetJaExistenteException;
 import br.com.cwi.reset.projeto1.exception.PetNaoExistenteException;
-import br.com.cwi.reset.projeto1.repository.PetRepository;
-import br.com.cwi.reset.projeto1.repository.PetRepositoryImpl;
+import br.com.cwi.reset.projeto1.repository.PetRepositoryDb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,7 @@ import java.util.List;
 public class PetService {
 
     @Autowired
-    private PetRepository petRepository;
+    private PetRepositoryDb petRepository;
 
     public Pet salvarPet(Pet pet) throws PetJaExistenteException {
         Pet petJaExistente = petRepository.findByNome(pet.getNome());
@@ -42,14 +41,18 @@ public class PetService {
 
     public Pet atualizarPet(Pet pet) throws FilmeNaoExistenteException {
         Pet petJaCadastrado = buscarPetPorNome(pet.getNome());
-        if (pet == null) {
+        if (petJaCadastrado == null) {
             throw new FilmeNaoExistenteException("Pet com o nome " + pet.getNome() + " não existe");
         }
-        return petRepository.update(pet);
+        return petRepository.save(pet);
     }
 
     public Pet buscarPetPorNome(String nomePet) {
         return petRepository.findByNome(nomePet);
+    }
+
+    public Pet buscarPorIdade(Integer idade) {
+        return petRepository.findByIdade(idade);
     }
 
 }
