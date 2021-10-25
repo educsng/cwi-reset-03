@@ -4,6 +4,7 @@ import br.com.cwi.reset.eduardocassanego.FakeDatabase;
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.*;
 import br.com.cwi.reset.eduardocassanego.request.DiretorRequest;
+import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,9 +24,7 @@ public class DiretorService {
 
     // Métodos
     public void cadastrarDiretor(DiretorRequest diretorRequest) throws
-            DataNascimentoCampoObrigatorioNaoInformadoException,
-            NomeCampoObrigatorioNaoInformadoException,
-            AnoInicioAtividadeCampoObrigatorioNaoInformadoException,
+            CampoObrigatorioNaoInformadoException,
             DeveConterNomeESobrenomeException,
             DataNascimentoMaiorQueDataAtualException,
             AnoInicioAtividadeMenorQueDataAtualException,
@@ -33,12 +32,9 @@ public class DiretorService {
 
 
         // VERIFICAÇÕES
-        // Campos obrigatórios
-        verificaCampoObrigatorio(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
-        // Mesmo Nome e sobrenome
-        if (!diretorRequest.getNome().contains(" ")) {
-            throw new DeveConterNomeESobrenomeException("diretor");
-        }
+        new ValidacoesPadroes().validaCamposObrigatoriosDiretor(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
+        new ValidacoesPadroes().validaNomeESobrenomeDiretor(diretorRequest.getNome());
+
         // Data Nascimento menor que data atual
         LocalDate now = LocalDate.now();
         if (now.isBefore(diretorRequest.getDataNascimento())) {
@@ -109,27 +105,6 @@ public class DiretorService {
 
 
     // Metodos auxiliares
-    public void verificaCampoObrigatorio(String nome, LocalDate dataNascimento, Integer anoInicioAtividade) throws NomeCampoObrigatorioNaoInformadoException, DataNascimentoCampoObrigatorioNaoInformadoException, AnoInicioAtividadeCampoObrigatorioNaoInformadoException {
-        if (verificaCampoObrigatorioNome(nome)) {
-            throw new NomeCampoObrigatorioNaoInformadoException();
-        }
-        if (verificaCampoObrigatorioDataNascimento(dataNascimento)) {
-            throw new DataNascimentoCampoObrigatorioNaoInformadoException();
-        }
-        if (verificaCampoObrigatorioAnoInicioAtividade(anoInicioAtividade)) {
-            throw new AnoInicioAtividadeCampoObrigatorioNaoInformadoException();
-        }
-    }
-
-    public boolean verificaCampoObrigatorioNome(String campo) {
-        return campo.isEmpty();
-    }
-    public boolean verificaCampoObrigatorioDataNascimento(LocalDate campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoObrigatorioAnoInicioAtividade(Integer campo) {
-        return campo == null;
-    }
     public boolean verificaDiretorBancoDeDadosVazio(List<Diretor> diretores) {return diretores.isEmpty();}
 
 }

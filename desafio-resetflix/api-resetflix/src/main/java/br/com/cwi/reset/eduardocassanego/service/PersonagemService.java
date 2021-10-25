@@ -6,6 +6,7 @@ import br.com.cwi.reset.eduardocassanego.model.Ator;
 import br.com.cwi.reset.eduardocassanego.model.PersonagemAtor;
 import br.com.cwi.reset.eduardocassanego.request.PersonagemRequest;
 import br.com.cwi.reset.eduardocassanego.model.TipoAtuacao;
+import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
 
 import java.util.*;
 
@@ -21,6 +22,7 @@ public class PersonagemService {
 
     //Demais métodos
     public PersonagemAtor cadastrarPersonagemAtor(PersonagemRequest personagemRequest) throws Exception {
+
         // verificar se existe ator com Id passado pelo request
         List<Ator> atores = fakeDatabase.recuperaAtores();
         boolean verificacao = false;
@@ -46,7 +48,7 @@ public class PersonagemService {
         //verificações
         for (PersonagemRequest personagemRequest : personagens) {
             // verificando campos obrigatórios
-            verificaCamposObrigatorios(personagemRequest.getIdAtor(), personagemRequest.getNomePersonagem(), personagemRequest.getDescricaoPersonagem(), personagemRequest.getTipoAtuacao());
+            new ValidacoesPadroes().validaCamposObrigatoriosPersonagemAtor(personagemRequest.getIdAtor(), personagemRequest.getNomePersonagem(), personagemRequest.getDescricaoPersonagem(), personagemRequest.getTipoAtuacao());
 
             //verificando a existência de personagem de mesmo nome e mesmo ator já cadastrado
             if (listaDePersonagens.contains(personagemRequest)) {
@@ -59,34 +61,5 @@ public class PersonagemService {
             personagensFilme.add(personagemCriado);
         }
         return personagensFilme;
-    }
-
-    // métodos auxiliares
-    public void verificaCamposObrigatorios(Integer idAtor, String nomePersonagem, String descricaoPersonagem, TipoAtuacao tipoAtuacao) throws CampoObrigatorioNaoInformadoException {
-        if (verificaCampoId(idAtor)){
-            throw new CampoObrigatorioNaoInformadoException("ID do ator");
-        }
-        if (verificaCampoNome(nomePersonagem)) {
-            throw new CampoObrigatorioNaoInformadoException("nome do personagem");
-        }
-        if (verificaCampoDescricao(descricaoPersonagem)) {
-            throw new CampoObrigatorioNaoInformadoException("descrição do personagem");
-        }
-        if (verificaCampoTipoAtuacao(tipoAtuacao)) {
-            throw new CampoObrigatorioNaoInformadoException("tipo atuação");
-        }
-    }
-
-    public boolean verificaCampoId(Integer campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoNome(String campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoDescricao(String campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoTipoAtuacao(TipoAtuacao campo) {
-        return campo == null;
     }
 }

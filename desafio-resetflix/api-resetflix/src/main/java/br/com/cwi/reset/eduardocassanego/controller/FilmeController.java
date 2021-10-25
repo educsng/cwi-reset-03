@@ -27,7 +27,6 @@ public class FilmeController {
     }
 
     @GetMapping
-    @ResponseBody
     public List<Filme> consultarFilmes(
             @RequestParam String nomeFilme,
             @RequestParam String nomeDiretor,

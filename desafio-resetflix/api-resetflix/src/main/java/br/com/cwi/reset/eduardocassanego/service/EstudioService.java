@@ -4,8 +4,8 @@ import br.com.cwi.reset.eduardocassanego.FakeDatabase;
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.Estudio;
 import br.com.cwi.reset.eduardocassanego.model.GeradorIdEstudio;
-import br.com.cwi.reset.eduardocassanego.model.StatusAtividade;
 import br.com.cwi.reset.eduardocassanego.request.EstudioRequest;
+import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,8 +25,11 @@ public class EstudioService {
 
     // métodos
     public void criarEstudio(EstudioRequest estudioRequest) throws Exception {
-        LocalDate now = LocalDate.now();
-        verificaCampoObrigatorio(estudioRequest.getNome(), estudioRequest.getDescricao(), estudioRequest.getDataCriacao(), estudioRequest.getStatusAtividade());
+
+        // verificando campos obrigatórios
+        new ValidacoesPadroes().validaCamposObrigatoriosEstudio(estudioRequest.getNome(), estudioRequest.getDescricao(), estudioRequest.getDataCriacao(), estudioRequest.getStatusAtividade());
+
+        // verificando a existência de estúdio de mesmo nome
         List<Estudio> estudios;
         estudios = fakeDatabase.recuperaEstudios();
 
@@ -36,6 +39,8 @@ public class EstudioService {
             }
         }
 
+        // verificando se data de criação é válida
+        LocalDate now = LocalDate.now();
         if (estudioRequest.getDataCriacao().isAfter(now)) {
             throw new DataCriacaoEstudioMaiorQueDataAtualException();
         }
@@ -43,8 +48,7 @@ public class EstudioService {
         fakeDatabase.persisteEstudio(estudio);
     }
 
-    public List<Estudio> consultarEstudios(String filtroNome) throws
-            FiltroDeObjetoNaoEncontradoException, NenhumEstudioCadastradoException {
+    public List<Estudio> consultarEstudios(String filtroNome) throws FiltroDeObjetoNaoEncontradoException, NenhumEstudioCadastradoException {
 
         List<Estudio> estudios = fakeDatabase.recuperaEstudios();
         List<Estudio> estudiosEncontrados = new ArrayList<>();
@@ -100,38 +104,4 @@ public class EstudioService {
         return null;
     }
 
-
-    // métodos auxiliares
-    public void verificaCampoObrigatorio(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade) throws
-            NomeCampoObrigatorioNaoInformadoException,
-            DescricaoCampoObrigatorioNaoInformadoException,
-            DataCriacaoCampoObrigatorioNaoInformadoException,
-            StatusAtividadeCampoObrigatorioNaoInformadoException {
-
-        if (verificaCampoObrigatorioNome(nome)) {
-            throw new NomeCampoObrigatorioNaoInformadoException();
-        }
-        if (verificaCampoObrigatorioDescricao(descricao)) {
-            throw new DescricaoCampoObrigatorioNaoInformadoException();
-        }
-        if (verificaCampoObrigatorioDataCriacao(dataCriacao)) {
-            throw new DataCriacaoCampoObrigatorioNaoInformadoException();
-        }
-        if (verificaCampoObrigatorioStatusAtividade(statusAtividade)) {
-            throw new StatusAtividadeCampoObrigatorioNaoInformadoException();
-        }
-    }
-
-    public boolean verificaCampoObrigatorioNome(String campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoObrigatorioDescricao(String campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoObrigatorioDataCriacao(LocalDate campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoObrigatorioStatusAtividade(StatusAtividade campo) {
-        return campo == null;
-    }
 }

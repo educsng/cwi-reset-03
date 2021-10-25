@@ -7,8 +7,7 @@ import br.com.cwi.reset.eduardocassanego.model.GeradorIdAtor;
 import br.com.cwi.reset.eduardocassanego.model.StatusCarreira;
 import br.com.cwi.reset.eduardocassanego.request.AtorRequest;
 import br.com.cwi.reset.eduardocassanego.response.AtorEmAtividade;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,12 +34,9 @@ public class AtorService {
             NomeJaExistenteException {
 
         // VERIFICAÇÕES
-        // Campos obrigatórios
-        verificaCampoObrigatorio(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
-        // Nome e sobrenome
-        if (!atorRequest.getNome().contains(" ")) {
-            throw new DeveConterNomeESobrenomeException("ator");
-        }
+        new ValidacoesPadroes().validaCamposObrigatoriosAtor(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
+        new ValidacoesPadroes().validaNomeESobrenomeAtor(atorRequest.getNome());
+
         // Data de nascimento menor que data atual
         LocalDate now = LocalDate.now();
         if (now.isBefore(atorRequest.getDataNascimento())) {
@@ -129,37 +125,5 @@ public class AtorService {
 
 
     // Métodos auxiliares
-    public void verificaCampoObrigatorio(String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) throws
-            NomeCampoObrigatorioNaoInformadoException,
-            DataNascimentoCampoObrigatorioNaoInformadoException,
-            StatusCarreiraCampoObrigatorioNaoInformadoException,
-            AnoInicioAtividadeCampoObrigatorioNaoInformadoException {
-
-        if (verificaCampoObrigatorioNome(nome)) {
-            throw new NomeCampoObrigatorioNaoInformadoException();
-        }
-        if (verificaCampoObrigatorioDataNascimento(dataNascimento)) {
-            throw new DataNascimentoCampoObrigatorioNaoInformadoException();
-        }
-        if (verificaCampoObrigatorioStatus(statusCarreira)) {
-            throw new StatusCarreiraCampoObrigatorioNaoInformadoException();
-        }
-        if (verificaCampoObrigatorioAnoInicioAtividade(anoInicioAtividade)) {
-            throw new AnoInicioAtividadeCampoObrigatorioNaoInformadoException();
-        }
-    }
-
-    public boolean verificaCampoObrigatorioNome(String campo) {
-        return campo.isEmpty();
-    }
-    public boolean verificaCampoObrigatorioDataNascimento(LocalDate campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoObrigatorioStatus(StatusCarreira campo) {
-        return campo == null;
-    }
-    public boolean verificaCampoObrigatorioAnoInicioAtividade(Integer campo) {
-        return campo == null;
-    }
     public boolean verificaAtorBancoDeDadosVazio(List<Ator> atores) {return atores.isEmpty();}
 }
