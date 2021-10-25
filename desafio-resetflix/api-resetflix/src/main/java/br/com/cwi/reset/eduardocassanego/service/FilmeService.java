@@ -3,14 +3,19 @@ package br.com.cwi.reset.eduardocassanego.service;
 import br.com.cwi.reset.eduardocassanego.FakeDatabase;
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.*;
+import br.com.cwi.reset.eduardocassanego.repository.FilmeRepositoryDb;
 import br.com.cwi.reset.eduardocassanego.request.FilmeRequest;
-import br.com.cwi.reset.eduardocassanego.request.PersonagemRequest;
 import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
+@Service
 public class FilmeService {
+
+    @Autowired
+    private FilmeRepositoryDb filmeRepositoryDb;
 
     //Atributos
     private FakeDatabase fakeDatabase;

@@ -1,46 +1,62 @@
 package br.com.cwi.reset.eduardocassanego.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
+@Entity
 public class Ator {
 
-    // Atributos
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
     private LocalDate dataNascimento;
+    @Enumerated(EnumType.STRING)
     private StatusCarreira statusCarreira;
     private Integer anoInicioAtividade;
 
-    // Construtor
-    public Ator(Integer id, String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) {
+    public Ator() {
+    }
 
-        this.id = id;
+    public Ator(String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.statusCarreira = statusCarreira;
         this.anoInicioAtividade = anoInicioAtividade;
     }
 
-
-    // Getters e Setters
-    public String getNome() {
-        return nome;
-    }
-
     public Integer getId() {
         return id;
     }
 
-    public StatusCarreira getStatusCarreira() {
-        return statusCarreira;
+    public String getNome() {
+        return nome;
     }
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
+    public StatusCarreira getStatusCarreira() {
+        return statusCarreira;
+    }
+
     public Integer getAnoInicioAtividade() {
         return anoInicioAtividade;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ator ator = (Ator) o;
+        return Objects.equals(id, ator.id) && Objects.equals(nome, ator.nome) && Objects.equals(dataNascimento, ator.dataNascimento) && statusCarreira == ator.statusCarreira && Objects.equals(anoInicioAtividade, ator.anoInicioAtividade);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nome, dataNascimento, statusCarreira, anoInicioAtividade);
     }
 
     public void setId(Integer id) {

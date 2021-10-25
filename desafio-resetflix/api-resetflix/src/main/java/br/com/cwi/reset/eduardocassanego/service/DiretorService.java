@@ -3,8 +3,11 @@ package br.com.cwi.reset.eduardocassanego.service;
 import br.com.cwi.reset.eduardocassanego.FakeDatabase;
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.*;
+import br.com.cwi.reset.eduardocassanego.repository.DiretorRepositoryDb;
 import br.com.cwi.reset.eduardocassanego.request.DiretorRequest;
 import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,10 +15,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+@Service
 public class DiretorService {
 
-    // Atributos
-    private FakeDatabase fakeDatabase;
+    @Autowired
+    private DiretorRepositoryDb diretorRepositoryDb;
 
     //Construtor
     public DiretorService(FakeDatabase fakeDatabase) {

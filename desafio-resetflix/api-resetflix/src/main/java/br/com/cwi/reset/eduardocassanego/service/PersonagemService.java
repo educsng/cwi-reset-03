@@ -4,16 +4,20 @@ import br.com.cwi.reset.eduardocassanego.FakeDatabase;
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.Ator;
 import br.com.cwi.reset.eduardocassanego.model.PersonagemAtor;
+import br.com.cwi.reset.eduardocassanego.repository.PersonagemRepositoryDb;
 import br.com.cwi.reset.eduardocassanego.request.PersonagemRequest;
 import br.com.cwi.reset.eduardocassanego.model.TipoAtuacao;
 import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class PersonagemService {
 
-    // Atributos
-    private FakeDatabase fakeDatabase;
+    @Autowired
+    private PersonagemRepositoryDb personagemRepositoryDb;
 
     // Construtor padrão
     public PersonagemService(FakeDatabase fakeDatabase) {

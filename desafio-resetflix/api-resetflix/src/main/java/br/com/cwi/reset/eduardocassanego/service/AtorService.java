@@ -1,35 +1,31 @@
 package br.com.cwi.reset.eduardocassanego.service;
 
-import br.com.cwi.reset.eduardocassanego.*;
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.Ator;
-import br.com.cwi.reset.eduardocassanego.model.GeradorIdAtor;
 import br.com.cwi.reset.eduardocassanego.model.StatusCarreira;
+import br.com.cwi.reset.eduardocassanego.repository.AtorRepositoryDb;
 import br.com.cwi.reset.eduardocassanego.request.AtorRequest;
 import br.com.cwi.reset.eduardocassanego.response.AtorEmAtividade;
 import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
+@Service
 public class AtorService {
 
-    // Atributos
-    private FakeDatabase fakeDatabase;
-
-    // Construtor padrão
-    public AtorService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
-    }
-
+    @Autowired
+    private AtorRepositoryDb atorRepositoryDb;
 
     // Demais métodos da classe
     public void criarAtor(AtorRequest atorRequest) throws
             CampoObrigatorioNaoInformadoException,
-            DeveConterNomeESobrenomeException, DataNascimentoMaiorQueDataAtualException,
+            DeveConterNomeESobrenomeException,
+            DataNascimentoMaiorQueDataAtualException,
             AnoInicioAtividadeMenorQueDataAtualException,
             NomeJaExistenteException {
 
@@ -42,6 +38,7 @@ public class AtorService {
         if (now.isBefore(atorRequest.getDataNascimento())) {
             throw new DataNascimentoMaiorQueDataAtualException("atores");
         }
+
         // Ano inicio atividade
         Integer anoNascimentoAtor = atorRequest.getDataNascimento().getYear();
         if (atorRequest.getAnoInicioAtividade() < anoNascimentoAtor) {
@@ -49,81 +46,60 @@ public class AtorService {
         }
 
         // Ator de mesmo nome
-        List<Ator> atores;
-        atores = fakeDatabase.recuperaAtores();
-
-        for (Ator ator : atores) {
-            if (ator.getNome().equalsIgnoreCase(atorRequest.getNome())) {
-                throw new NomeJaExistenteException("ator", atorRequest.getNome());
-            }
+        Ator atorJaExistente = atorRepositoryDb.findByNomeIgnoringCase(atorRequest.getNome());
+        if (atorJaExistente != null) {
+            throw new NomeJaExistenteException("ator", atorRequest.getNome());
+        } else {
+            Ator ator = new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
+            atorRepositoryDb.save(ator);
         }
-
-        // Após todas as verificações, instancia o objeto Ator e persiste na fakedatabase
-        Ator ator = new Ator(GeradorIdAtor.proximoId(), atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
-        fakeDatabase.persisteAtor(ator);
     }
 
-    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NenhumObjetoCadastradoException,
-            FiltroDeObjetoNaoEncontradoException {
+    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NenhumObjetoCadastradoException, FiltroDeObjetoNaoEncontradoException {
+
         List<AtorEmAtividade> retorno = new ArrayList<>();
 
-        if (verificaAtorBancoDeDadosVazio(fakeDatabase.recuperaAtores())) {
+        if (atorRepositoryDb.findAll().isEmpty()) {
             throw new NenhumObjetoCadastradoException("ator");
         }
 
         if (filtroNome != null) {
-            for (Ator ator : fakeDatabase.recuperaAtores()) {
-                String verificaNome = ator.getNome().toLowerCase(Locale.ROOT);
-                if (verificaNome.contains(filtroNome.toLowerCase(Locale.ROOT))) {
+            for (Ator ator : atorRepositoryDb.findAll()) {
+                if (ator.getNome().toLowerCase(Locale.ROOT).contains(filtroNome.toLowerCase(Locale.ROOT))) {
                     if (ator.getStatusCarreira().equals(StatusCarreira.EM_ATIVIDADE)) {
-                        AtorEmAtividade atorEmAtividade1 = new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento());
-                        retorno.add(atorEmAtividade1);
+                        retorno.add(new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento()));
                     }
                 } else {
                     throw new FiltroDeObjetoNaoEncontradoException("Ator", filtroNome);
                 }
             }
+        } else {
+            for (Ator ator : atorRepositoryDb.findAll()) {
+                if (ator.getStatusCarreira().equals(StatusCarreira.EM_ATIVIDADE)) {
+                    retorno.add(new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento()));
+                }
+            }
+        }
 
+        if (retorno.isEmpty()) {
+            throw new FiltroDeObjetoNaoEncontradoException("Ator", filtroNome);
         }
         return retorno;
     }
 
-
-    public Ator consultarAtor(Integer id) throws
-            IdNaoCorrespondeException,
-            CampoObrigatorioNaoInformadoException {
-
-        List<Ator> atores = fakeDatabase.recuperaAtores();
-        boolean exception = false;
-
-        if (id != null) {
-            for (Ator ator : atores) {
-                if (!Objects.equals(ator.getId(), id)) {
-                    exception = true;
-                } else {
-                    return ator;
-                }
-            }
-        } else {
-            throw new CampoObrigatorioNaoInformadoException("id");
+    public Ator consultarAtor(Integer id) throws IdNaoCorrespondeException {
+        Ator atorEncontrado = atorRepositoryDb.findById(id).orElse(null);
+        if (atorEncontrado == null) {
+            throw new IdNaoCorrespondeException("ator", id);
         }
-
-        if (exception) { throw new IdNaoCorrespondeException("ator", id); }
-        return null;
+        return atorEncontrado;
     }
 
-
-    public List<Ator> consultarAtores() throws NenhumObjetoCadastradoException {
-        List<Ator> atoresConsultados = fakeDatabase.recuperaAtores();
-        if (verificaAtorBancoDeDadosVazio(atoresConsultados)) {
+    public List<Ator> consultarAtores() throws Exception {
+        if (atorRepositoryDb.findAll().isEmpty()) {
             throw new NenhumObjetoCadastradoException("ator");
-        } else {
-            return atoresConsultados;
         }
+        return atorRepositoryDb.findAll();
     }
 
-
-
-    // Métodos auxiliares
-    public boolean verificaAtorBancoDeDadosVazio(List<Ator> atores) {return atores.isEmpty();}
 }
