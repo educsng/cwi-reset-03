@@ -94,11 +94,21 @@ public class AtorService {
         return atorEncontrado;
     }
 
-    public List<Ator> consultarAtores() throws Exception {
+    public List<Ator> consultarAtores() throws NenhumObjetoCadastradoException {
         if (atorRepositoryDb.findAll().isEmpty()) {
             throw new NenhumObjetoCadastradoException("ator");
         }
         return atorRepositoryDb.findAll();
+    }
+
+    public List<Ator> consultarAtoresComFiltroNome(String filtro) throws FiltroDeObjetoNaoEncontradoException {
+        List<Ator> atoresFiltrados = new ArrayList<>();
+        Ator ator = atorRepositoryDb.findByNomeContainingIgnoringCase(filtro);
+        if (ator == null) {
+            throw new FiltroDeObjetoNaoEncontradoException("Ator", filtro);
+        }
+        atoresFiltrados.add(ator);
+        return atoresFiltrados;
     }
 
 }

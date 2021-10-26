@@ -20,6 +20,8 @@ public class FilmeService {
     private EstudioService estudioService;
     @Autowired
     private PersonagemService personagemService;
+    @Autowired
+    private AtorService atorService;
 
     // Demais métodos da classe
     public void criarFilme(FilmeRequest filmeRequest) throws Exception {
@@ -107,7 +109,29 @@ public class FilmeService {
                         }
                     }
                 }
+            }
+            if (!nomeAtor.isEmpty()) {
+                List<Ator> atores = atorService.consultarAtores();
+                List<Ator> atoresFiltrados = new ArrayList<>();
 
+                for (Ator ator : atores) {
+                    if (ator.getNome().toLowerCase(Locale.ROOT).contains(nomeAtor.toLowerCase(Locale.ROOT))) {
+                        atoresFiltrados.add(ator);
+                    }
+                }
+                if (!atoresFiltrados.isEmpty()) {
+                    for (Filme filme : filmes) {
+                        for (PersonagemAtor personagemAtor : filme.getPersonagens()) {
+                            for (Ator ator : atoresFiltrados) {
+                                if (personagemAtor.getAtor().equals(ator)) {
+                                    if (!filmesEncontrados.contains(filme)) {
+                                        filmesEncontrados.add(filme);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         if (filmesEncontrados.isEmpty()) {
@@ -115,5 +139,4 @@ public class FilmeService {
         }
         return filmesEncontrados;
     }
-
 }
