@@ -2,6 +2,7 @@ package br.com.cwi.reset.eduardocassanego.request;
 
 import br.com.cwi.reset.eduardocassanego.model.TipoAtuacao;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -11,7 +12,9 @@ public class PersonagemRequest {
     @NotNull(message = "Campo obrigatório não informado, favor informar o campo id ator")
     private Integer idAtor;
     @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome personagem")
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo nome personagem")
     private String nomePersonagem;
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo descrição personagem")
     @NotNull(message = "Campo obrigatório não informado, favor informar o campo descrição personagem")
     private String descricaoPersonagem;
     @NotNull(message = "Campo obrigatório não informado, favor informar o campo tipo atuação")

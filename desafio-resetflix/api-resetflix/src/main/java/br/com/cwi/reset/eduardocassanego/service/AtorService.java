@@ -2,6 +2,7 @@ package br.com.cwi.reset.eduardocassanego.service;
 
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.Ator;
+import br.com.cwi.reset.eduardocassanego.model.PersonagemAtor;
 import br.com.cwi.reset.eduardocassanego.model.StatusCarreira;
 import br.com.cwi.reset.eduardocassanego.repository.AtorRepositoryDb;
 import br.com.cwi.reset.eduardocassanego.request.AtorRequest;
@@ -20,6 +21,8 @@ public class AtorService {
 
     @Autowired
     private AtorRepositoryDb atorRepositoryDb;
+    @Autowired
+    private PersonagemService personagemService;
 
     // Demais métodos da classe
     public void criarAtor(AtorRequest atorRequest) throws
@@ -30,7 +33,6 @@ public class AtorService {
             NomeJaExistenteException {
 
         // VERIFICAÇÕES
-        new ValidacoesPadroes().validaCamposObrigatoriosAtor(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
         new ValidacoesPadroes().validaNomeESobrenomeAtor(atorRequest.getNome());
 
         // Data de nascimento menor que data atual
@@ -101,14 +103,25 @@ public class AtorService {
         return atorRepositoryDb.findAll();
     }
 
-    public List<Ator> consultarAtoresComFiltroNome(String filtro) throws FiltroDeObjetoNaoEncontradoException {
-        List<Ator> atoresFiltrados = new ArrayList<>();
-        Ator ator = atorRepositoryDb.findByNomeContainingIgnoringCase(filtro);
-        if (ator == null) {
-            throw new FiltroDeObjetoNaoEncontradoException("Ator", filtro);
+    public void atualizarAtor(Integer id, AtorRequest atorRequest) throws IdNaoCorrespondeException, DeveConterNomeESobrenomeException, DataNascimentoMaiorQueDataAtualException, CampoObrigatorioNaoInformadoException, AnoInicioAtividadeMenorQueDataAtualException, NomeJaExistenteException {
+        Ator atorEncontrado = atorRepositoryDb.findById(id).orElse(null);
+        if (atorEncontrado == null) {
+            throw new IdNaoCorrespondeException("ator", id);
         }
-        atoresFiltrados.add(ator);
-        return atoresFiltrados;
+        atorRepositoryDb.delete(atorEncontrado);
+        criarAtor(atorRequest);
     }
 
+    public void removerAtor(Integer id) throws IdNaoCorrespondeException, AtorVinculadoAUmOuMaisPersonagensException {
+        Ator atorEncontrado = atorRepositoryDb.findById(id).orElse(null);
+        if (atorEncontrado == null) {
+            throw new IdNaoCorrespondeException("ator", id);
+        }
+        for (PersonagemAtor personagemAtor : personagemService.consultarPersonagens()) {
+            if (personagemAtor.getAtor().equals(atorEncontrado)) {
+                throw new AtorVinculadoAUmOuMaisPersonagensException();
+            }
+        }
+        atorRepositoryDb.delete(atorEncontrado);
+    }
 }

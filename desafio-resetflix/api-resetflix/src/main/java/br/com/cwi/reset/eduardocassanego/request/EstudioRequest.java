@@ -2,14 +2,17 @@ package br.com.cwi.reset.eduardocassanego.request;
 
 import br.com.cwi.reset.eduardocassanego.model.StatusAtividade;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class EstudioRequest {
 
     // Atributos
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo nome")
     @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome")
     private String nome;
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo descrição")
     @NotNull(message = "Campo obrigatório não informado, favor informar o campo descrição")
     private String descricao;
     @NotNull(message = "Campo obrigatório não informado, favor informar o campo data criação")
