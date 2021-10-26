@@ -1,12 +1,16 @@
 package br.com.cwi.reset.eduardocassanego.request;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class DiretorRequest {
 
     // Atributos
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome")
     private String nome;
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo data nascimento")
     private LocalDate dataNascimento;
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo ano início atividade")
     private Integer anoInicioAtividade;
 
     // Construtor

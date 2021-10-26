@@ -50,8 +50,7 @@ public class AtorService {
         if (atorJaExistente != null) {
             throw new NomeJaExistenteException("ator", atorRequest.getNome());
         } else {
-            Ator ator = new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
-            atorRepositoryDb.save(ator);
+            atorRepositoryDb.save(new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade()));
         }
     }
 

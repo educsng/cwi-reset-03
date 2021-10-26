@@ -1,11 +1,9 @@
 package br.com.cwi.reset.eduardocassanego.service;
 
-import br.com.cwi.reset.eduardocassanego.FakeDatabase;
 import br.com.cwi.reset.eduardocassanego.exception.*;
 import br.com.cwi.reset.eduardocassanego.model.*;
 import br.com.cwi.reset.eduardocassanego.repository.FilmeRepositoryDb;
 import br.com.cwi.reset.eduardocassanego.request.FilmeRequest;
-import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,50 +14,25 @@ public class FilmeService {
 
     @Autowired
     private FilmeRepositoryDb filmeRepositoryDb;
-
-    //Atributos
-    private FakeDatabase fakeDatabase;
-    private AtorService atorService;
+    @Autowired
     private DiretorService diretorService;
+    @Autowired
     private EstudioService estudioService;
+    @Autowired
     private PersonagemService personagemService;
-
-    // Construtor
-    public FilmeService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
-        this.atorService = new AtorService(FakeDatabase.getInstance());
-        this.diretorService = new DiretorService(FakeDatabase.getInstance());
-        this.estudioService = new EstudioService(FakeDatabase.getInstance());
-        this.personagemService = new PersonagemService(FakeDatabase.getInstance());
-    }
 
     // Demais métodos da classe
     public void criarFilme(FilmeRequest filmeRequest) throws Exception {
 
-        //verificando campos obrigatórios
-        new ValidacoesPadroes().validaCamposObrigatoriosFilme(filmeRequest.getNome(), filmeRequest.getAnoLancamento(), filmeRequest.getCapaFilme(), filmeRequest.getGeneros(), filmeRequest.getIdDiretor(), filmeRequest.getIdEstudio(), filmeRequest.getResumo(), filmeRequest.getPersonagens());
-
         //verificando ID diretor
-        List<Diretor> diretores = fakeDatabase.recuperaDiretores();
-        boolean idDiretorEncontrado = false;
-        for (Diretor diretor : diretores) {
-            if (Objects.equals(filmeRequest.getIdDiretor(), diretor.getId())) {
-                idDiretorEncontrado = true;
-            }
-        }
-        if (!idDiretorEncontrado) {
+        Diretor diretor = diretorService.consultarDiretor(filmeRequest.getIdDiretor());
+        if (diretor == null) {
             throw new IdNaoCorrespondeException("diretor", filmeRequest.getIdDiretor());
         }
 
         //verificando ID estúdio
-        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
-        boolean idEstudioEncontrado = false;
-        for (Estudio estudio : estudios) {
-            if (Objects.equals(filmeRequest.getIdEstudio(), estudio.getId())) {
-                idEstudioEncontrado = true;
-            }
-        }
-        if (!idEstudioEncontrado) {
+        Estudio estudio = estudioService.consultarEstudio(filmeRequest.getIdEstudio());
+        if (estudio == null) {
             throw new IdNaoCorrespondeException("estúdio", filmeRequest.getIdEstudio());
         }
 
@@ -78,15 +51,14 @@ public class FilmeService {
             }
         }
 
-        Diretor diretor = diretorService.consultarDiretor(filmeRequest.getIdDiretor());
-        Estudio estudio = estudioService.consultarEstudioPorID(filmeRequest.getIdEstudio());
+        Diretor diretorEstanciado = diretorService.consultarDiretor(filmeRequest.getIdDiretor());
+        Estudio estudioEstanciado = estudioService.consultarEstudio(filmeRequest.getIdEstudio());
         List<PersonagemAtor> personagens = personagemService.criarPersonagemFilme(filmeRequest.getPersonagens());
-        Filme filme = new Filme(GeradorIdFilme.proximoId(), filmeRequest.getNome(), filmeRequest.getAnoLancamento(), filmeRequest.getCapaFilme(), filmeRequest.getGeneros(), diretor, estudio, personagens, filmeRequest.getResumo());
-        fakeDatabase.persisteFilme(filme);
+        filmeRepositoryDb.save(new Filme(filmeRequest.getNome(), filmeRequest.getAnoLancamento().getYear(), filmeRequest.getCapaFilme(), filmeRequest.getGeneros(), estudioEstanciado, diretorEstanciado, personagens, filmeRequest.getResumo()));
     }
 
     public List<Filme> consultarFilmes(String nomeFilme, String nomeDiretor, String nomePersonagem, String nomeAtor) throws Exception {
-        List<Filme> filmes = fakeDatabase.recuperaFilmes();
+        List<Filme> filmes = (List<Filme>) filmeRepositoryDb.findAll();
         List<Filme> filmesEncontrados = new ArrayList<>();
 
         if (filmes.isEmpty()) {
@@ -114,7 +86,7 @@ public class FilmeService {
                 }
             }
             if (!nomePersonagem.isEmpty()) {
-                List<PersonagemAtor> personagens = fakeDatabase.recuperaPersonagens();
+                List<PersonagemAtor> personagens = personagemService.consultarPersonagens();
                 boolean personagemEncontrado = false;
                 PersonagemAtor personagemComNomeIgual = null;
 
