@@ -143,4 +143,16 @@ public class FilmeService {
     public List<Filme> consultarTodos() {
         return (List<Filme>) filmeRepositoryDb.findAll();
     }
+
+    public void removerFilme(Integer id) throws IdNaoCorrespondeException {
+        Filme filmeEncontrado = filmeRepositoryDb.findById(id).orElse(null);
+        if (filmeEncontrado == null) {
+            throw new IdNaoCorrespondeException("filme", id);
+        }
+        Integer idFilme = filmeEncontrado.getId();
+        for (PersonagemAtor personagemAtor : filmeEncontrado.getPersonagens()) {
+            personagemService.deletarPersonagem(personagemAtor.getId());
+        }
+        filmeRepositoryDb.delete(filmeEncontrado);
+    }
 }

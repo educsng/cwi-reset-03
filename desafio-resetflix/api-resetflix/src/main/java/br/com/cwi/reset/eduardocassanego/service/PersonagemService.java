@@ -50,4 +50,12 @@ public class PersonagemService {
     public List<PersonagemAtor> consultarPersonagens() {
         return (List<PersonagemAtor>) personagemRepositoryDb.findAll();
     }
+
+    public void deletarPersonagem(Integer id) throws IdNaoCorrespondeException {
+        PersonagemAtor personagemAtorEncontrado = personagemRepositoryDb.findById(id).orElse(null);
+        if (personagemAtorEncontrado == null) {
+            throw new IdNaoCorrespondeException("personagem", id);
+        }
+        personagemRepositoryDb.delete(personagemAtorEncontrado);
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.cwi.reset.eduardocassanego.controller;
 
+import br.com.cwi.reset.eduardocassanego.exception.IdNaoCorrespondeException;
 import br.com.cwi.reset.eduardocassanego.model.*;
 import br.com.cwi.reset.eduardocassanego.request.FilmeRequest;
 import br.com.cwi.reset.eduardocassanego.service.FilmeService;
@@ -31,6 +32,11 @@ public class FilmeController {
             @RequestParam String nomePersonagem,
             @RequestParam String nomeAtor) throws Exception {
         return filmeService.consultarFilmes(nomeFilme, nomeDiretor, nomePersonagem, nomeAtor);
+    }
+
+    @DeleteMapping("/{id}")
+    public void removerFilme(@PathVariable @Valid Integer id) throws Exception {
+        filmeService.removerFilme(id);
     }
 
 
