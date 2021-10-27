@@ -18,6 +18,8 @@ public class DiretorService {
 
     @Autowired
     private DiretorRepositoryDb diretorRepositoryDb;
+    @Autowired
+    private FilmeService filmeService;
 
     // Métodos
     public void cadastrarDiretor(DiretorRequest diretorRequest) throws
@@ -74,8 +76,32 @@ public class DiretorService {
     public Diretor consultarDiretor(Integer id) throws IdNaoCorrespondeException {
         Diretor diretorEncontrado = diretorRepositoryDb.findById(id).orElse(null);
         if (diretorEncontrado == null) {
-            throw new IdNaoCorrespondeException("ator", id);
+            throw new IdNaoCorrespondeException("diretor", id);
         }
         return diretorEncontrado;
     }
+
+    public void atualizarDiretor(Integer id, DiretorRequest diretorRequest) throws IdNaoCorrespondeException {
+        Diretor diretorAtualizado = new Diretor(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
+        Diretor diretorEncontrado = diretorRepositoryDb.findById(id).orElse(null);
+        if (diretorEncontrado == null) {
+            throw new IdNaoCorrespondeException("diretor", id);
+        }
+        diretorAtualizado.setId(id);
+        diretorRepositoryDb.save(diretorAtualizado);
+    }
+
+    public void removerDiretores(Integer id) throws IdNaoCorrespondeException, DiretorVinculadoAUmOuMaisFilmesException {
+        Diretor diretorEncontrado = diretorRepositoryDb.findById(id).orElse(null);
+        if (diretorEncontrado == null) {
+            throw new IdNaoCorrespondeException("diretor", id);
+        }
+        for (Filme filme : filmeService.consultarTodos()) {
+            if (filme.getDiretor().equals(diretorEncontrado)) {
+                throw new DiretorVinculadoAUmOuMaisFilmesException();
+            }
+        }
+        diretorRepositoryDb.delete(diretorEncontrado);
+    }
+
 }

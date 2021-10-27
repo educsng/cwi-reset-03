@@ -139,4 +139,8 @@ public class FilmeService {
         }
         return filmesEncontrados;
     }
+
+    public List<Filme> consultarTodos() {
+        return (List<Filme>) filmeRepositoryDb.findAll();
+    }
 }
