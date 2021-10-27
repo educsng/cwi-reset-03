@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @Service
 public class AtorService {
@@ -103,13 +104,14 @@ public class AtorService {
         return atorRepositoryDb.findAll();
     }
 
-    public void atualizarAtor(Integer id, AtorRequest atorRequest) throws IdNaoCorrespondeException, DeveConterNomeESobrenomeException, DataNascimentoMaiorQueDataAtualException, CampoObrigatorioNaoInformadoException, AnoInicioAtividadeMenorQueDataAtualException, NomeJaExistenteException {
+    public void atualizarAtor(Integer id, AtorRequest atorRequest) throws IdNaoCorrespondeException, DeveConterNomeESobrenomeException, DataNascimentoMaiorQueDataAtualException, CampoObrigatorioNaoInformadoException, AnoInicioAtividadeMenorQueDataAtualException, NomeJaExistenteException, AtorVinculadoAUmOuMaisPersonagensException {
+        Ator atorAtualizado = new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
         Ator atorEncontrado = atorRepositoryDb.findById(id).orElse(null);
         if (atorEncontrado == null) {
             throw new IdNaoCorrespondeException("ator", id);
         }
-        atorRepositoryDb.delete(atorEncontrado);
-        criarAtor(atorRequest);
+        atorAtualizado.setId(id);
+        atorRepositoryDb.save(atorAtualizado);
     }
 
     public void removerAtor(Integer id) throws IdNaoCorrespondeException, AtorVinculadoAUmOuMaisPersonagensException {
