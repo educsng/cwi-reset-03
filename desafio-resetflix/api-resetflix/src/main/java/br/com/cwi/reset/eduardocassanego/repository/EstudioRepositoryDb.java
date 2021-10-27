@@ -10,4 +10,5 @@ import java.util.List;
 public interface EstudioRepositoryDb extends CrudRepository<Estudio, Integer> {
 
     List<Estudio> findAll();
+    List<Estudio> findByNomeContainingIgnoringCase(String filtro);
 }

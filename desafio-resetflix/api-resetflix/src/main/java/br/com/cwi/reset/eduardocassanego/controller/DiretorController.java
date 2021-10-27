@@ -1,10 +1,8 @@
 package br.com.cwi.reset.eduardocassanego.controller;
 
 import br.com.cwi.reset.eduardocassanego.model.Diretor;
-import br.com.cwi.reset.eduardocassanego.request.AtorRequest;
 import br.com.cwi.reset.eduardocassanego.request.DiretorRequest;
 import br.com.cwi.reset.eduardocassanego.service.DiretorService;
-import br.com.cwi.reset.eduardocassanego.service.DiretorVinculadoAUmOuMaisFilmesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

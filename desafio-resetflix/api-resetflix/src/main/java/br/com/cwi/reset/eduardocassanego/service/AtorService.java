@@ -58,33 +58,28 @@ public class AtorService {
     }
 
     public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NenhumObjetoCadastradoException, FiltroDeObjetoNaoEncontradoException {
-
+        List<Ator> listaFiltrada;
         List<AtorEmAtividade> retorno = new ArrayList<>();
 
         if (atorRepositoryDb.findAll().isEmpty()) {
             throw new NenhumObjetoCadastradoException("ator");
         }
-
         if (filtroNome != null) {
-            for (Ator ator : atorRepositoryDb.findAll()) {
-                if (ator.getNome().toLowerCase(Locale.ROOT).contains(filtroNome.toLowerCase(Locale.ROOT))) {
+            listaFiltrada = atorRepositoryDb.findByNomeContainingIgnoringCase(filtroNome);
+            if (!listaFiltrada.isEmpty()) {
+                for (Ator ator : listaFiltrada) {
                     if (ator.getStatusCarreira().equals(StatusCarreira.EM_ATIVIDADE)) {
                         retorno.add(new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento()));
                     }
-                } else {
-                    throw new FiltroDeObjetoNaoEncontradoException("Ator", filtroNome);
                 }
+            } else {
+                throw new FiltroDeObjetoNaoEncontradoException("Ator", filtroNome);
             }
         } else {
             for (Ator ator : atorRepositoryDb.findAll()) {
-                if (ator.getStatusCarreira().equals(StatusCarreira.EM_ATIVIDADE)) {
-                    retorno.add(new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento()));
-                }
+                retorno.add(new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento()));
             }
-        }
-
-        if (retorno.isEmpty()) {
-            throw new FiltroDeObjetoNaoEncontradoException("Ator", filtroNome);
+            return retorno;
         }
         return retorno;
     }

@@ -135,7 +135,7 @@ public class FilmeService {
             }
         }
         if (filmesEncontrados.isEmpty()) {
-            throw new Exception(String.format("Filme não encontrado com os filtros nomeFilme={%s}, nomeDiretor={%s}, nomePersonagem={%s}, nomeAtor={%s}, favor informar outros filtros", nomeFilme, nomePersonagem, nomeDiretor, nomeAtor));
+            throw new FilmeNaoEncontradoComFiltrosException(nomeFilme, nomePersonagem, nomeDiretor, nomeAtor);
         }
         return filmesEncontrados;
     }
@@ -149,7 +149,6 @@ public class FilmeService {
         if (filmeEncontrado == null) {
             throw new IdNaoCorrespondeException("filme", id);
         }
-        Integer idFilme = filmeEncontrado.getId();
         for (PersonagemAtor personagemAtor : filmeEncontrado.getPersonagens()) {
             personagemService.deletarPersonagem(personagemAtor.getId());
         }

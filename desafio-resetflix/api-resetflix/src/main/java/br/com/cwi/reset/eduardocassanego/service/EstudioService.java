@@ -37,27 +37,20 @@ public class EstudioService {
     }
 
     public List<Estudio> consultarEstudios(String filtroNome) throws FiltroDeObjetoNaoEncontradoException, NenhumEstudioCadastradoException {
-
-        List<Estudio> estudiosEncontrados = new ArrayList<>();
-        boolean verificacao = false;
+        List<Estudio> estudioEncontrado;
 
         if (estudioRepositoryDb.findAll().isEmpty()) {
             throw new NenhumEstudioCadastradoException();
         }
-
         if (filtroNome != null) {
-            for (Estudio estudio : estudioRepositoryDb.findAll()) {
-                String verificaNome = estudio.getNome().toLowerCase(Locale.ROOT);
-                if (verificaNome.contains(filtroNome.toLowerCase(Locale.ROOT))) {
-                    estudiosEncontrados.add(estudio);
-                } else {
-                    throw new FiltroDeObjetoNaoEncontradoException("Estúdio", filtroNome);
-                }
-            }
+            estudioEncontrado = estudioRepositoryDb.findByNomeContainingIgnoringCase(filtroNome);
         } else {
             return estudioRepositoryDb.findAll();
         }
-        return estudiosEncontrados;
+        if (estudioEncontrado.isEmpty()) {
+            throw new FiltroDeObjetoNaoEncontradoException("Estúdio", filtroNome);
+        }
+        return estudioEncontrado;
     }
 
     public Estudio consultarEstudio(Integer id) throws NenhumEstudioCadastradoException, IdNaoCorrespondeException {

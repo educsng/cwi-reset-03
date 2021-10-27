@@ -11,6 +11,6 @@ import java.util.List;
 public interface AtorRepositoryDb extends CrudRepository<Ator, Integer> {
 
     Ator findByNomeIgnoringCase(String nome);
-    Ator findByNomeContainingIgnoringCase(String filtroNome);
+    List<Ator> findByNomeContainingIgnoringCase(String filtroNome);
     List<Ator> findAll();
 }

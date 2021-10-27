@@ -2,6 +2,7 @@ package br.com.cwi.reset.eduardocassanego.request;
 
 import br.com.cwi.reset.eduardocassanego.model.Genero;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ public class FilmeRequest {
     @NotBlank(message = "Campo obrigatório não informado, favor informar o campo resumo")
     @NotNull(message = "Campo obrigatório não informado, favor informar o campo resumo")
     private String resumo;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo personagens")
+    @Valid
     private List<PersonagemRequest> personagens;
 
     // Construtor

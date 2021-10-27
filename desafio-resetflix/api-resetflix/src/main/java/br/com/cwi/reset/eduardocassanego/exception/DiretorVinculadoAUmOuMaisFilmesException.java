@@ -1,4 +1,4 @@
-package br.com.cwi.reset.eduardocassanego.service;
+package br.com.cwi.reset.eduardocassanego.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

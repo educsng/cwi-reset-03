@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class DiretorService {
@@ -52,25 +50,20 @@ public class DiretorService {
     }
 
     public List<Diretor> listarDiretores(String filtroNome) throws NenhumObjetoCadastradoException, FiltroDeObjetoNaoEncontradoException {
-        List<Diretor> retorno = new ArrayList<>();
+        List<Diretor> listaFiltrada;
 
         if (diretorRepositoryDb.findAll().isEmpty()) {
             throw new NenhumObjetoCadastradoException("diretor");
         }
-
         if (filtroNome != null) {
-            for (Diretor diretor : diretorRepositoryDb.findAll()) {
-                String verificaNome = diretor.getNome().toLowerCase(Locale.ROOT);
-                if (verificaNome.contains(filtroNome.toLowerCase(Locale.ROOT))) {
-                    retorno.add(diretor);
-                } else {
-                    throw new FiltroDeObjetoNaoEncontradoException("Diretor", filtroNome);
-                }
-            }
+            listaFiltrada = diretorRepositoryDb.findByNomeContainingIgnoringCase(filtroNome);
         } else {
             return diretorRepositoryDb.findAll();
         }
-        return retorno;
+        if (listaFiltrada.isEmpty()) {
+            throw new FiltroDeObjetoNaoEncontradoException("Diretor", filtroNome);
+        }
+        return listaFiltrada;
     }
 
     public Diretor consultarDiretor(Integer id) throws IdNaoCorrespondeException {
