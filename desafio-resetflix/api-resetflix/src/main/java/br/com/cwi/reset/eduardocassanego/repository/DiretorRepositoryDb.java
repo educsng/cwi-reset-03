@@ -13,6 +13,8 @@ public interface DiretorRepositoryDb extends CrudRepository<Diretor, Integer> {
 
     List<Diretor> findByNomeContainingIgnoringCase(String filtro);
 
+    Diretor findByNomeIgnoringCase(String nome);
+
     Diretor findByAnoInicioAtividade(Integer anoInicioAtividade);
 
     List<Diretor> findAll();

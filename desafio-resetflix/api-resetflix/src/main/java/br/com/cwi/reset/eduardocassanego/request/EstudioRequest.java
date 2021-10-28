@@ -4,20 +4,22 @@ import br.com.cwi.reset.eduardocassanego.model.StatusAtividade;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 public class EstudioRequest {
 
     // Atributos
-    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo nome")
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome")
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo nome.")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome.")
     private String nome;
-    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo descrição")
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo descrição")
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo descrição.")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo descrição.")
     private String descricao;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo data criação")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo data criação.")
+    @Past(message = "Não é possível cadastrar estúdios do futuro.")
     private LocalDate dataCriacao;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo status atividade")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo status atividade.")
     private StatusAtividade statusAtividade;
 
     // Construtor

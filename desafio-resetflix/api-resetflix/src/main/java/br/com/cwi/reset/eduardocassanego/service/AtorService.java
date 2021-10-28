@@ -11,11 +11,8 @@ import br.com.cwi.reset.eduardocassanego.validator.ValidacoesPadroes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 @Service
 public class AtorService {
@@ -26,26 +23,15 @@ public class AtorService {
     private PersonagemService personagemService;
 
     // Demais métodos da classe
-    public void criarAtor(AtorRequest atorRequest) throws
-            CampoObrigatorioNaoInformadoException,
-            DeveConterNomeESobrenomeException,
-            DataNascimentoMaiorQueDataAtualException,
-            AnoInicioAtividadeMenorQueDataAtualException,
-            NomeJaExistenteException {
+    public void criarAtor(AtorRequest atorRequest) throws DeveConterNomeESobrenomeException, AnoInicioAtividadeMenorQueDataNascimentoException, NomeJaExistenteException {
 
         // VERIFICAÇÕES
         new ValidacoesPadroes().validaNomeESobrenomeAtor(atorRequest.getNome());
 
-        // Data de nascimento menor que data atual
-        LocalDate now = LocalDate.now();
-        if (now.isBefore(atorRequest.getDataNascimento())) {
-            throw new DataNascimentoMaiorQueDataAtualException("atores");
-        }
-
         // Ano inicio atividade
         Integer anoNascimentoAtor = atorRequest.getDataNascimento().getYear();
         if (atorRequest.getAnoInicioAtividade() < anoNascimentoAtor) {
-            throw new AnoInicioAtividadeMenorQueDataAtualException("ator");
+            throw new AnoInicioAtividadeMenorQueDataNascimentoException("ator");
         }
 
         // Ator de mesmo nome
@@ -99,7 +85,7 @@ public class AtorService {
         return atorRepositoryDb.findAll();
     }
 
-    public void atualizarAtor(Integer id, AtorRequest atorRequest) throws IdNaoCorrespondeException, DeveConterNomeESobrenomeException, DataNascimentoMaiorQueDataAtualException, CampoObrigatorioNaoInformadoException, AnoInicioAtividadeMenorQueDataAtualException, NomeJaExistenteException, AtorVinculadoAUmOuMaisPersonagensException {
+    public void atualizarAtor(Integer id, AtorRequest atorRequest) throws IdNaoCorrespondeException, DeveConterNomeESobrenomeException, DataNascimentoMaiorQueDataAtualException, CampoObrigatorioNaoInformadoException, AnoInicioAtividadeMenorQueDataNascimentoException, NomeJaExistenteException, AtorVinculadoAUmOuMaisPersonagensException {
         Ator atorAtualizado = new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
         Ator atorEncontrado = atorRepositoryDb.findById(id).orElse(null);
         if (atorEncontrado == null) {

@@ -11,22 +11,22 @@ import java.util.List;
 public class FilmeRequest {
 
     // Atributos
-    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo nome")
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome")
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo nome.")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome.")
     private String nome;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo ano lançamento")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo ano lançamento.")
     private LocalDate anoLancamento;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo capa filme")
-    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo capa filme")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo capa filme.")
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo capa filme.")
     private String capaFilme;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo gêneros")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo gêneros.")
     private List<Genero> generos;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo id diretor")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo id diretor.")
     private Integer idDiretor;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo id estúdio")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo id estúdio.")
     private Integer idEstudio;
-    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo resumo")
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo resumo")
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo resumo.")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo resumo.")
     private String resumo;
     @Valid
     private List<PersonagemRequest> personagens;

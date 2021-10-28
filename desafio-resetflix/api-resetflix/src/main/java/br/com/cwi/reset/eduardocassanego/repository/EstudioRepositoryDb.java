@@ -11,4 +11,5 @@ public interface EstudioRepositoryDb extends CrudRepository<Estudio, Integer> {
 
     List<Estudio> findAll();
     List<Estudio> findByNomeContainingIgnoringCase(String filtro);
+    Estudio findByNomeIgnoringCase(String nome);
 }

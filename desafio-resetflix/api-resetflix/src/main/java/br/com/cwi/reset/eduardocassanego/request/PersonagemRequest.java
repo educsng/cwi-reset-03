@@ -9,15 +9,15 @@ import java.util.Objects;
 public class PersonagemRequest {
 
     //Atributos
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo id ator")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo id ator.")
     private Integer idAtor;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome personagem")
-    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo nome personagem")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo nome personagem.")
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo nome personagem.")
     private String nomePersonagem;
-    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo descrição personagem")
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo descrição personagem")
+    @NotBlank(message = "Campo obrigatório não informado, favor informar o campo descrição personagem.")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo descrição personagem.")
     private String descricaoPersonagem;
-    @NotNull(message = "Campo obrigatório não informado, favor informar o campo tipo atuação")
+    @NotNull(message = "Campo obrigatório não informado, favor informar o campo tipo atuação.")
     private TipoAtuacao tipoAtuacao;
 
     // Construtor
