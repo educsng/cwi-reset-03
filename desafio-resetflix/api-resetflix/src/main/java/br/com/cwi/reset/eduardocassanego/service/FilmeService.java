@@ -56,6 +56,7 @@ public class FilmeService {
         Diretor diretorEstanciado = diretorService.consultarDiretor(filmeRequest.getIdDiretor());
         Estudio estudioEstanciado = estudioService.consultarEstudio(filmeRequest.getIdEstudio());
         List<PersonagemAtor> personagens = personagemService.criarPersonagemFilme(filmeRequest.getPersonagens());
+
         filmeRepositoryDb.save(new Filme(filmeRequest.getNome(), filmeRequest.getAnoLancamento().getYear(), filmeRequest.getCapaFilme(), filmeRequest.getGeneros(), estudioEstanciado, diretorEstanciado, personagens, filmeRequest.getResumo()));
     }
 
@@ -146,6 +147,7 @@ public class FilmeService {
 
     public void removerFilme(Integer id) throws IdNaoCorrespondeException {
         Filme filmeEncontrado = filmeRepositoryDb.findById(id).orElse(null);
+
         if (filmeEncontrado == null) {
             throw new IdNaoCorrespondeException("filme", id);
         }

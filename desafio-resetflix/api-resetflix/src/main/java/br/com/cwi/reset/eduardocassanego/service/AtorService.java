@@ -25,14 +25,8 @@ public class AtorService {
     // Demais métodos da classe
     public void criarAtor(AtorRequest atorRequest) throws DeveConterNomeESobrenomeException, AnoInicioAtividadeMenorQueDataNascimentoException, NomeJaExistenteException {
 
-        // VERIFICAÇÕES
         new ValidacoesPadroes().validaNomeESobrenomeAtor(atorRequest.getNome());
-
-        // Ano inicio atividade
-        Integer anoNascimentoAtor = atorRequest.getDataNascimento().getYear();
-        if (atorRequest.getAnoInicioAtividade() < anoNascimentoAtor) {
-            throw new AnoInicioAtividadeMenorQueDataNascimentoException("ator");
-        }
+        new ValidacoesPadroes().validaAnoInicioAtividade("ator", atorRequest.getAnoInicioAtividade(), atorRequest.getDataNascimento().getYear());
 
         // Ator de mesmo nome
         Ator atorJaExistente = atorRepositoryDb.findByNomeIgnoringCase(atorRequest.getNome());
@@ -72,6 +66,7 @@ public class AtorService {
 
     public Ator consultarAtor(Integer id) throws IdNaoCorrespondeException {
         Ator atorEncontrado = atorRepositoryDb.findById(id).orElse(null);
+
         if (atorEncontrado == null) {
             throw new IdNaoCorrespondeException("ator", id);
         }
@@ -79,6 +74,7 @@ public class AtorService {
     }
 
     public List<Ator> consultarAtores() throws NenhumObjetoCadastradoException {
+
         if (atorRepositoryDb.findAll().isEmpty()) {
             throw new NenhumObjetoCadastradoException("ator");
         }
@@ -88,18 +84,31 @@ public class AtorService {
     public void atualizarAtor(Integer id, AtorRequest atorRequest) throws IdNaoCorrespondeException, DeveConterNomeESobrenomeException, DataNascimentoMaiorQueDataAtualException, CampoObrigatorioNaoInformadoException, AnoInicioAtividadeMenorQueDataNascimentoException, NomeJaExistenteException, AtorVinculadoAUmOuMaisPersonagensException {
         Ator atorAtualizado = new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
         Ator atorEncontrado = atorRepositoryDb.findById(id).orElse(null);
+
         if (atorEncontrado == null) {
             throw new IdNaoCorrespondeException("ator", id);
         }
+        // Ator de mesmo nome
+        Ator atorJaExistente = atorRepositoryDb.findByNomeIgnoringCase(atorRequest.getNome());
+        if (atorJaExistente != null) {
+            throw new NomeJaExistenteException("ator", atorRequest.getNome());
+        } else {
+            atorRepositoryDb.save(new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade()));
+        }
+
+        new ValidacoesPadroes().validaNomeESobrenomeAtor(atorRequest.getNome());
+        new ValidacoesPadroes().validaAnoInicioAtividade("ator", atorRequest.getAnoInicioAtividade(), atorRequest.getDataNascimento().getYear());
         atorAtualizado.setId(id);
         atorRepositoryDb.save(atorAtualizado);
     }
 
     public void removerAtor(Integer id) throws IdNaoCorrespondeException, AtorVinculadoAUmOuMaisPersonagensException {
         Ator atorEncontrado = atorRepositoryDb.findById(id).orElse(null);
+
         if (atorEncontrado == null) {
             throw new IdNaoCorrespondeException("ator", id);
         }
+
         for (PersonagemAtor personagemAtor : personagemService.consultarPersonagens()) {
             if (personagemAtor.getAtor().equals(atorEncontrado)) {
                 throw new AtorVinculadoAUmOuMaisPersonagensException();

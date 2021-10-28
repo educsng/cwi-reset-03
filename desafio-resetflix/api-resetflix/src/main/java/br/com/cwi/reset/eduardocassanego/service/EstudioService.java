@@ -46,6 +46,7 @@ public class EstudioService {
 
     public Estudio consultarEstudio(Integer id) throws IdNaoCorrespondeException {
         Estudio estudioEncontrado = estudioRepositoryDb.findById(id).orElse(null);
+
         if (estudioEncontrado == null) {
             throw new IdNaoCorrespondeException("estúdio", id);
         }

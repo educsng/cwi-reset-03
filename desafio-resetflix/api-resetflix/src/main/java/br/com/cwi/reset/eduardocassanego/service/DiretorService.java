@@ -19,21 +19,14 @@ public class DiretorService {
     private FilmeService filmeService;
 
     // Métodos
-    public void cadastrarDiretor(DiretorRequest diretorRequest) throws
-            DeveConterNomeESobrenomeException,
-            AnoInicioAtividadeMenorQueDataNascimentoException,
-            NomeJaExistenteException {
+    public void cadastrarDiretor(DiretorRequest diretorRequest) throws DeveConterNomeESobrenomeException, AnoInicioAtividadeMenorQueDataNascimentoException, NomeJaExistenteException {
 
-        // VERIFICAÇÕES
         new ValidacoesPadroes().validaNomeESobrenomeDiretor(diretorRequest.getNome());
+        new ValidacoesPadroes().validaAnoInicioAtividade("diretor", diretorRequest.getAnoInicioAtividade(), diretorRequest.getDataNascimento().getYear());
 
-        // Ano Inicio Atividade menor que data de nascimento
-        Integer anoNascimentoAtor = diretorRequest.getDataNascimento().getYear();
-        if (diretorRequest.getAnoInicioAtividade() < anoNascimentoAtor) {
-            throw new AnoInicioAtividadeMenorQueDataNascimentoException("diretor");
-        }
         // Diretor de mesmo nome
         Diretor diretorJaExistente = diretorRepositoryDb.findByNomeIgnoringCase(diretorRequest.getNome());
+
         if (diretorJaExistente != null) {
             throw new NomeJaExistenteException("diretor", diretorRequest.getNome());
         } else {
@@ -60,27 +53,42 @@ public class DiretorService {
 
     public Diretor consultarDiretor(Integer id) throws IdNaoCorrespondeException {
         Diretor diretorEncontrado = diretorRepositoryDb.findById(id).orElse(null);
+
         if (diretorEncontrado == null) {
             throw new IdNaoCorrespondeException("diretor", id);
         }
         return diretorEncontrado;
     }
 
-    public void atualizarDiretor(Integer id, DiretorRequest diretorRequest) throws IdNaoCorrespondeException {
+    public void atualizarDiretor(Integer id, DiretorRequest diretorRequest) throws IdNaoCorrespondeException, DeveConterNomeESobrenomeException, AnoInicioAtividadeMenorQueDataNascimentoException, NomeJaExistenteException {
         Diretor diretorAtualizado = new Diretor(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
         Diretor diretorEncontrado = diretorRepositoryDb.findById(id).orElse(null);
+
         if (diretorEncontrado == null) {
             throw new IdNaoCorrespondeException("diretor", id);
         }
+        // Diretor de mesmo nome
+        Diretor diretorJaExistente = diretorRepositoryDb.findByNomeIgnoringCase(diretorRequest.getNome());
+
+        if (diretorJaExistente != null) {
+            throw new NomeJaExistenteException("diretor", diretorRequest.getNome());
+        } else {
+            diretorRepositoryDb.save(new Diretor(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade()));
+        }
+
+        new ValidacoesPadroes().validaNomeESobrenomeDiretor(diretorRequest.getNome());
+        new ValidacoesPadroes().validaAnoInicioAtividade("diretor", diretorRequest.getAnoInicioAtividade(), diretorRequest.getDataNascimento().getYear());
         diretorAtualizado.setId(id);
         diretorRepositoryDb.save(diretorAtualizado);
     }
 
     public void removerDiretores(Integer id) throws IdNaoCorrespondeException, DiretorVinculadoAUmOuMaisFilmesException {
         Diretor diretorEncontrado = diretorRepositoryDb.findById(id).orElse(null);
+
         if (diretorEncontrado == null) {
             throw new IdNaoCorrespondeException("diretor", id);
         }
+
         for (Filme filme : filmeService.consultarTodos()) {
             if (filme.getDiretor().equals(diretorEncontrado)) {
                 throw new DiretorVinculadoAUmOuMaisFilmesException();
