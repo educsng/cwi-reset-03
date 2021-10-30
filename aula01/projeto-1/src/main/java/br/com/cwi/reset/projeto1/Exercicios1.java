@@ -16,7 +16,7 @@ public class Exercicios1 {
 
     public Double calcularMedia(List<Integer> numeros) {
         if (numeros.isEmpty()) {
-            return null;
+            return 0.0;
         }
         return (double) (somarLista(numeros) / numeros.size());
     }
