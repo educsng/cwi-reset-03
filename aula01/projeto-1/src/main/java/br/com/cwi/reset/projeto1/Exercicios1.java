@@ -7,16 +7,18 @@ public class Exercicios1 {
 
     public Integer somarLista(List<Integer> numeros) {
 
-        int soma = 0;
-        for (int i = 0; i < numeros.size(); i++) {
-            soma = soma + numeros.get(i);
+        Integer sum = 0;
+        for (Integer num : numeros) {
+            sum += num;
         }
-        return soma;
+        return sum;
     }
 
     public Double calcularMedia(List<Integer> numeros) {
-        double media = somarLista(numeros) / numeros.size();
-        return media;
+        if (numeros.isEmpty()) {
+            return null;
+        }
+        return (double) (somarLista(numeros) / numeros.size());
     }
 
     public Integer obterMaiorNumero(List<Integer> numeros) {
